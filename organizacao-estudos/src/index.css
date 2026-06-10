@@ -1,0 +1,186 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #050505;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding-top: 50px;
+}
+
+h1 {
+  font-size: 3.5rem;
+  margin-bottom: 60px;
+  letter-spacing: 2px;
+}
+
+.dias {
+  display: grid;
+  grid-template-columns: repeat(3, 250px);
+  gap: 25px;
+}
+
+.card-dia {
+  height: 140px;
+
+  background: #0f0f0f;
+
+  border: 1px solid #222;
+  border-radius: 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.3rem;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.card-dia:hover {
+  transform: translateY(-5px);
+
+  border-color: #555;
+
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+.btn-voltar {
+  position: absolute;
+
+  top: 30px;
+  left: 30px;
+
+  background: transparent;
+  border: none;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 1rem;
+
+  transition: 0.2s;
+}
+
+.btn-voltar:hover {
+  opacity: 0.7;
+}
+
+.materias-container {
+  display: flex;
+
+  gap: 30px;
+
+  margin-top: 20px;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+}
+
+.materia-card {
+  width: 420px;
+  min-height: 320px;
+
+  background: #0f0f0f;
+
+  border: 1px solid #222;
+  border-radius: 16px;
+
+  padding: 25px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  transition: 0.2s;
+}
+
+.materia-card:hover {
+  border-color: #555;
+}
+
+.materia-card h2 {
+  text-align: center;
+
+  min-height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assunto {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  color: #ccc;
+
+  font-size: 1.1rem;
+
+  padding: 0 10px;
+}
+
+.btn-proximo {
+  background: white;
+  color: black;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 12px 20px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  transition: 0.2s;
+}
+
+.btn-proximo:hover {
+  opacity: 0.9;
+}
+
+.checkbox-container{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-bottom: 15px;
+}
+
+.checkbox{
+  width:20px;
+  height:20px;
+
+  cursor:pointer;
+
+  accent-color:white;
+}
+
+.btn-proximo:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
