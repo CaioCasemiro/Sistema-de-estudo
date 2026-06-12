@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { semana, assuntos } from "./dados";
-import { supabase } from "./supabase";
+import { db } from "./firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+
 
 export default function App() {
 
@@ -21,24 +23,30 @@ export default function App() {
 
     async function carregarProgresso() {
 
-      const { data, error } =
-        await supabase
-          .from("progresso")
-          .select("*");
+      try {
 
-      if (error) {
-        console.error(error);
-        return;
+        const referencia = doc(
+          db,
+          "progresso",
+          "materias"
+        );
+
+        const documento =
+          await getDoc(referencia);
+
+        if (documento.exists()) {
+
+          setProgresso(
+            documento.data()
+          );
+
+        }
+
+      } catch (erro) {
+
+        console.error(erro);
+
       }
-
-      const progressoBanco = {};
-
-      data.forEach((item) => {
-        progressoBanco[item.materia] =
-          item.indice_atual;
-      });
-
-      setProgresso(progressoBanco);
 
     }
 
@@ -55,22 +63,33 @@ export default function App() {
       ((progresso[materia] || 0) + 1) %
       totalAssuntos;
 
-    const { error } = await supabase
-      .from("progresso")
-      .update({
-        indice_atual: novoIndice
-      })
-      .eq("materia", materia);
+    try {
 
-    if (error) {
-      console.error(error);
-      return;
+      const referencia = doc(
+        db,
+        "progresso",
+        "materias"
+      );
+
+      await updateDoc(
+        referencia,
+        {
+          [materia]: novoIndice
+        }
+      );
+
+      setProgresso(
+        (anterior) => ({
+          ...anterior,
+          [materia]: novoIndice
+        })
+      );
+
+    } catch (erro) {
+
+      console.error(erro);
+
     }
-
-    setProgresso((anterior) => ({
-      ...anterior,
-      [materia]: novoIndice
-    }));
 
   }
 
