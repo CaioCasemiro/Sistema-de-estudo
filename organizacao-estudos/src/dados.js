@@ -61,7 +61,8 @@ export const assuntos = {
     "Crimes hediondos",
     "Lei antirracismo",
     "Tortura",
-    "LEP"
+    "LEP",
+    "Crimes cibernéticos"
   ],
 
   "Conhecimentos Regionais": [
@@ -75,31 +76,32 @@ export const assuntos = {
   ],
 
   "Direito Constitucional": [
-    "Princípios fundamentais",
-    "Direitos e garantias fundamentais",
+    "Princípios fundamentais art 1 ao 4",
+    "Direitos e garantias fundamentais art 5",
     "Remédios constitucionais",
-    "Direitos sociais",
-    "Nacionalidade",
-    "Direitos políticos",
-    "Segurança pública",
-    "Organização do estado",
-    "Estados, municípios e intervenção",
-    "Administração pública"
+    "Direitos sociais art 6 ao 11",
+    "Nacionalidade art 12 e 12+1",
+    "Direitos políticos art 14 a 16",
+    "Segurança pública art 144",
+    "Organização do estado art 18 ao 24",
+    "Estados, municípios e intervenção art 25 ao 36",
+    "Administração pública art 37 ao 41"
   ],
 
   "Direito Penal": [
-    "Aplicação da lei penal",
-    "Crimes",
-    "Culpabilidade",
+    "Aplicação da lei penal (princípios, tempo, espaço, conflito de normas...)",
+    "Dos Crimes 1 (Fato típico, Conduta, Resultaod, Nexo causal e tipicidade)",
+    "Dos Crimes 2 (Ilicitude e excludente de ilicitude)",
+    "Dos Crimes 3 (Culpabilidade, Imputabilidade, Exigibilidade de conduta diversa, Consciência de ilicitude)",
+    "Iter Criminis (Consumação, tentativa, desistência voluntária, arrep. eficaz, crime impossível)",
     "Concurso de pessoas e crimes",
-    "Penas",
+    "Das Penas (espécies, aplicação, regimes, substituição, sursis)",
     "Extinção da punibilidade",
     "Crimes contra a pessoa",
     "Crimes contra o patrimônio",
     "Dignidade sexual",
     "Paz e fé pública",
-    "Administração pública",
-    "Crimes cibernéticos"
+    "Administração pública"
   ],
 
   "Direito Administrativo": [
