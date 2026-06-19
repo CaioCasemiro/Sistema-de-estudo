@@ -128,8 +128,8 @@ export const cronogramaSemanal = {
   "Segunda": ["Português", "Conhecimentos Regionais"],
   "Terça": ["Direito Constitucional", "Conhecimentos Gerais"],
   "Quarta": ["RLM", "Informática"],
-  "Quinta": ["Direito Penal", "Legislação Institucional"],
-  "Sexta": ["Legislação Especial", "Redação"],
+  "Quinta": ["Direito Administrativo", "Legislação Especial"],
+  "Sexta": ["Direito Penal", "Legislação Institucional"],
   "Sábado": ["Redação", "Simulado"],
   "Domingo": ["Português", "RLM"]
 };
