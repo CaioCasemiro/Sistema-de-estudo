@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
-import { semana, assuntos } from "./dados";
+import { ciclo, assuntos } from "./dados";
 import { db } from "./firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 
 export default function App() {
 
-  const [diaSelecionado, setDiaSelecionado] = useState(null);
+  const [indiceCiclo, setIndiceCiclo] = useState(0);
   const [progresso, setProgresso] = useState({});
   const [estudado, setEstudado] = useState({});
 
-  const dias = [
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
-    "Sábado"
-  ];
+  const materiaAtual = ciclo[indiceCiclo];
+
+  const indiceAtual =
+    progresso[materiaAtual] || 0;
+
+  const assuntoAtual =
+    assuntos[materiaAtual]?.[indiceAtual] ||
+    "Nenhum assunto cadastrado";
 
   useEffect(() => {
 
@@ -85,6 +85,11 @@ export default function App() {
         })
       );
 
+      setIndiceCiclo(
+        (anterior) =>
+          (anterior + 1) % ciclo.length
+      );
+
     } catch (erro) {
 
       console.error(erro);
@@ -94,113 +99,61 @@ export default function App() {
   }
 
   return (
-    <div className="container">
+  <div className="container">
 
-      {!diaSelecionado ? (
+    <h1>HOJE</h1>
 
-        <>
-          <h1>Organização de Estudos</h1>
+    <div className="materias-container">
 
-          <div className="dias">
+      <div className="materia-card">
 
-            {dias.map((dia) => (
-              <div
-                key={dia}
-                className="card-dia"
-                onClick={() => setDiaSelecionado(dia)}
-              >
-                {dia.toUpperCase()}
-              </div>
-            ))}
+        <h2>{materiaAtual}</h2>
 
-          </div>
-        </>
+        <p className="assunto">
+          {assuntoAtual}
+        </p>
 
-      ) : (
+        <label className="checkbox-container">
 
-        <>
-          <button
-            className="btn-voltar"
-            onClick={() => setDiaSelecionado(null)}
-          >
-            ← Voltar
-          </button>
+          <input
+            className="checkbox"
+            type="checkbox"
+            checked={estudado[materiaAtual] || false}
+            onChange={(e) => {
 
-          <h1>{diaSelecionado.toUpperCase()}</h1>
+              setEstudado((anterior) => ({
+                ...anterior,
+                [materiaAtual]: e.target.checked
+              }));
 
-          <div className="materias-container">
+            }}
+          />
 
-            {semana[diaSelecionado].map((materia) => {
+          <span>Estudei</span>
 
-              const indiceAtual =
-                progresso[materia] || 0;
+        </label>
 
-              const assuntoAtual =
-                assuntos[materia]?.[indiceAtual] ||
-                "Nenhum assunto cadastrado";
+        <button
+          className="btn-proximo"
+          disabled={!estudado[materiaAtual]}
+          onClick={async () => {
 
-              return (
+            await avancarAssunto(materiaAtual);
 
-                <div
-                  key={materia}
-                  className="materia-card"
-                >
+            setEstudado((anterior) => ({
+              ...anterior,
+              [materiaAtual]: false
+            }));
 
-                  <h2>{materia}</h2>
+          }}
+        >
+          Próximo assunto
+        </button>
 
-                  <p className="assunto">
-                    {assuntoAtual}
-                  </p>
-
-                  <label className="checkbox-container">
-
-                    <input
-                      className="checkbox"
-                      type="checkbox"
-                      checked={estudado[materia] || false}
-                      onChange={(e) => {
-
-                        setEstudado((anterior) => ({
-                          ...anterior,
-                          [materia]: e.target.checked
-                        }));
-
-                      }}
-                    />
-
-                    <span>Estudei</span>
-
-                  </label>
-
-                  <button
-                    className="btn-proximo"
-                    disabled={!estudado[materia]}
-                    onClick={async () => {
-
-                      await avancarAssunto(materia);
-
-                      setEstudado((anterior) => ({
-                        ...anterior,
-                        [materia]: false
-                      }));
-
-                    }}
-                  >
-                    Próximo assunto
-                  </button>
-
-                </div>
-
-              );
-
-            })}
-
-          </div>
-
-        </>
-
-      )}
+      </div>
 
     </div>
-  );
+
+  </div>
+);
 }
