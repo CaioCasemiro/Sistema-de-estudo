@@ -1,199 +1,137 @@
 export const ciclo = [
-  "Direito Penal",
-  "Direito Constitucional",
-  "Legislação PMPI",
-  "Português",
-  "RLM",
-  "Direito Administrativo",
-  "Legislação Especial",
-  "Informática",
-  "Português",
-  "Direito Penal",
-  "Direito Constitucional",
-  "Conhecimentos Regionais",
-  "Conhecimentos Gerais"
+  "Português", "RLM", "Conhecimentos Regionais", "Conhecimentos Gerais",
+  "Informática", "Direito Constitucional", "Direito Penal",
+  "Legislação Especial", "Legislação Institucional", "Redação", "Simulado"
 ];
 
 export const assuntos = {
-
   "Português": [
-    "Interpretação, compreensão e análise de textos",
-    "Significação das palavras, semântica e linguagem figurada",
-    "Variação linguística, funções da linguagem e comunicação",
-    "Ortografia e acentuação gráfica",
-    "Estrutura, formação e classes de palavras",
-    "Flexão e emprego das classes gramaticais",
-    "Frase, oração e período",
-    "Sintaxe das relações entre termos e orações",
-    "Concordância nominal e verbal",
-    "Regência nominal e verbal",
-    "Crase e pontuação"
+    "Compreensão, interpretação e análise de textos de gêneros diversos considerados em suas relações semântico-gramaticais.",
+    "Significação de palavras e expressões em contextos diversos.",
+    "A linguagem considerada em seus aspectos de variação e função. Estrutura e elementos de comunicação.",
+    "Vícios de linguagem; A linguagem figurada.",
+    "A Língua portuguesa em sua estrutura gramatical e em sua dimensão lógico-semântica: Aspectos fonológicos que incidem sobre a acentuação gráfica.",
+    "Morfologia: A palavra – estrutura, formação, classificação, flexão e emprego.",
+    "Sintaxe: A frase, a oração e o período; Período simples e período composto – Relações sintáticas entre termos da oração e entre orações.",
+    "Sintaxe de Concordância nominal e verbal, de Regência nominal e verbal. A crase.",
+    "Pontuação.",
+    "Ortografia oficial."
   ],
-
-  "Legislação PMPI": [
-    "Lei nº 3.529/1977 - Lei de Organização Básica da PMPI",
-    "Lei nº 3.808/1981 - Estatuto dos Policiais Militares do Estado do Piauí",
-    "Lei nº 7.725/2022 - Código de Ética e Disciplina dos Militares do Estado do Piauí",
-    "Lei nº 5.378/2004 - Código de Vencimentos da PMPI",
-    "Lei Complementar nº 68/2006 - Promoção de Praças da PMPI",
-    "Decreto nº 11.349/2004 - Regulamento de Promoção de Praças",
-    "Decreto-Lei nº 667/1969 - Reorganiza as Polícias Militares",
-    "Lei Federal nº 14.751/2023 - Lei Orgânica Nacional das Polícias Militares",
-    "Decreto Federal nº 88.777/1983 - R-200"
-  ],
-
-  "Legislação Especial": [
-    "Lei nº 11.340/2006 - Lei Maria da Penha",
-    "Lei nº 8.069/1990 - Estatuto da Criança e do Adolescente (Crimes)",
-    "Lei nº 9.099/1995 - Juizados Especiais Criminais",
-    "Lei nº 9.605/1998 - Crimes Ambientais",
-    "Lei nº 13.869/2019 - Abuso de Autoridade",
-    "Lei nº 13.964/2019 - Pacote Anticrime",
-    "Lei nº 12.527/2011 - Lei de Acesso à Informação",
-    "Decreto nº 19.841/1945 - Carta das Nações Unidas",
-    "Decreto nº 592/1992 - Pacto Internacional sobre Direitos Civis e Políticos",
-    "Decreto nº 40/1991 - Convenção Contra a Tortura"
-  ],
-
-  "Conhecimentos Regionais": [
-    "Território do Piauí",
-    "Características gerais e socioeconômicas",
-    "Formação histórica do Piauí",
-    "Dinâmicas recentes do espaço piauiense",
-    "População do Piauí",
-    "Economia do Piauí",
-    "Urbanização do Piauí",
-    "Espaço agrário piauiense",
-    "Relevo do Piauí",
-    "Clima do Piauí",
-    "Vegetação do Piauí",
-    "Hidrografia do Piauí",
-    "Exploração dos recursos naturais",
-    "Questão ambiental no Piauí"
-  ],
-
-  "Conhecimentos Gerais": [
-    "Política nacional e mundial",
-    "Economia nacional e mundial",
-    "Disputas interimperialistas",
-    "Transformações do espaço capitalista",
-    "Blocos econômicos",
-    "Potências globais e regionais",
-    "Organismos internacionais",
-    "Globalização",
-    "Fragmentação do espaço",
-    "Conflitos étnicos atuais",
-    "Conflitos políticos atuais",
-    "Conflitos religiosos atuais",
-    "Recursos naturais e geopolítica",
-    "Relações econômicas Brasil x Mundo",
-    "População brasileira",
-    "Economia brasileira",
-    "Urbanização brasileira",
-    "Questão ambiental nacional",
-    "Questão ambiental internacional"
-  ],
-
-  "Direito Constitucional": [
-    "Princípios Fundamentais",
-    "Direitos e Garantias Fundamentais",
-    "Direitos Sociais",
-    "Nacionalidade",
-    "Organização do Estado",
-    "Administração Pública",
-    "Segurança Pública",
-    "Constituição Estadual - Administração Pública",
-    "Constituição Estadual - Servidores Militares",
-    "Constituição Estadual - Justiça Militar",
-    "Constituição Estadual - Segurança Pública"
-  ],
-
-  "Direito Penal": [
-    "Princípios do Direito Penal",
-    "Aplicação da Lei Penal",
-    "Classificação dos Crimes",
-    "Fato Típico",
-    "Crime Consumado e Tentado",
-    "Desistência Voluntária, Arrependimento Eficaz e Crime Impossível",
-    "Dolo e Culpa",
-    "Erro",
-    "Ilicitude e Excludentes",
-    "Excesso Punível",
-    "Culpabilidade",
-    "Imputabilidade Penal",
-    "Concurso de Pessoas",
-    "Concurso de Crimes",
-    "Espécies e Aplicação das Penas",
-    "Crimes Contra a Pessoa",
-    "Crimes Contra o Patrimônio",
-    "Crimes Contra a Dignidade Sexual",
-    "Crimes Contra a Incolumidade Pública",
-    "Crimes Contra a Paz Pública",
-    "Crimes Contra a Fé Pública",
-    "Crimes Contra a Administração Pública",
-    "Crime de Perseguição (Stalking)"
-  ],
-
-  "Direito Administrativo": [
-    "Estado, Governo e Administração Pública",
-    "Elementos do Estado",
-    "Poderes e Organização do Estado",
-    "Natureza e Fins da Administração",
-    "Princípios Administrativos",
-    "Administração Direta",
-    "Administração Indireta",
-    "Poder Hierárquico",
-    "Poder Disciplinar",
-    "Poder Regulamentar",
-    "Poder de Polícia",
-    "Abuso de Poder",
-    "Controle Administrativo",
-    "Controle Judicial",
-    "Controle Legislativo",
-    "Responsabilidade Civil do Estado",
-    "Lei nº 8.429/1992 - Improbidade Administrativa"
-  ],
-
   "RLM": [
-    "Lógica proposicional e argumentativa",
-    "Conjuntos",
-    "Números reais, MMC e MDC",
-    "Frações",
-    "Razão, proporção e regra de três",
-    "Porcentagem",
-    "Juros simples e compostos",
-    "Geometria plana",
-    "Geometria espacial",
-    "Equações e sistemas",
-    "PA e PG",
-    "Probabilidade",
-    "Análise combinatória"
+    "Noções de lógica matemática e lógica argumentativa: proposição simples, proposição composta, negação de proposição simples e composta, implicação, relação de equivalência, sentenças abertas, problemas de raciocínio lógico argumentativo matemático.",
+    "Conjuntos, tipos de conjuntos, relações de pertinência, inclusão, igualdade e desigualdade entre conjuntos, subconjuntos, união, intersecção, diferença de conjuntos e complementar de um conjunto.",
+    "Números naturais, inteiros, racionais, irracionais e reais: operações (adição, subtração, multiplicação, divisão, potenciação e radiciação), expressões numéricas, múltiplos e divisores de números, mínimo múltiplo comum e máximo divisor comum.",
+    "Frações: Propriedades, operações e problemas.",
+    "Razão, proporção, regra de três simples e composta, porcentagens, juros simples e juros compostos.",
+    "Geometria plana: Figuras geométricas simples: reta, semirreta, segmento, ângulo plano, polígonos planos, circunferência e círculo. Congruência de figuras planas. Semelhança de triângulos. Relações métricas nos triângulos, polígonos regulares e círculos. Áreas de polígonos, círculos, coroa e setor circular.",
+    "Geometria espacial: Prismas, pirâmides e respectivos troncos: cálculo de áreas e volumes. Cilindro, cone e esfera: cálculo de áreas e volumes.",
+    "Medidas de comprimento, superfície, volume, capacidade, massa e tempo.",
+    "Unidades de medidas: transformação das unidades de medidas.",
+    "Equação e inequação do 1º grau com até duas variáveis, equação e inequação do 2º grau e sistema de equações.",
+    "Função polinomial de 1º grau, função polinomial de 2º grau e funções exponencial e logarítmica.",
+    "Matrizes e sistemas lineares.",
+    "Progressão aritmética e progressão geométrica.",
+    "Probabilidade e análise combinatória."
   ],
-
+  "Conhecimentos Regionais": [
+    "O território do Piauí: características gerais e socioeconômicas, formação histórica e dinâmicas recentes.",
+    "O espaço piauiense: população, economia, urbanização.",
+    "O espaço agrário piauiense.",
+    "Aspectos naturais do Piauí: relevo, clima, vegetação e hidrografia.",
+    "Exploração e usos dos recursos naturais no Piauí.",
+    "Questão ambiental no Piauí: problemas ambientais, degradação e conservação."
+  ],
+  "Conhecimentos Gerais": [
+    "Política e economia no espaço nacional e mundial. Disputas interimperialistas e transformações do espaço capitalista.",
+    "Os blocos econômicos e as potências globais e regionais no sistema internacional. Organismos Internacionais.",
+    "Globalização e Fragmentação do espaço. Conflitos étnicos, políticos e religiosos atuais.",
+    "Exploração e usos dos recursos naturais e os desafios geopolíticos do século XXI.",
+    "Relações econômicas entre o Brasil e o Mundo.",
+    "O espaço brasileiro: população, economia e urbanização.",
+    "Questão Ambiental: problemas ambientais, degradação e conservação no âmbito nacional e internacional."
+  ],
   "Informática": [
-    "Hardware",
-    "Periféricos",
-    "CPU",
-    "Memórias",
-    "Dispositivos de Entrada e Saída",
-    "Windows 10",
-    "Pastas e Diretórios",
-    "Arquivos e Atalhos",
-    "Área de Trabalho",
-    "Área de Transferência",
-    "Manipulação de Arquivos",
-    "Microsoft Word",
-    "Microsoft Excel",
-    "Microsoft PowerPoint",
-    "Internet",
-    "Histórico e Favoritos",
-    "URL",
-    "Links",
-    "Sites",
-    "Busca na Internet"
+    "Noções de hardware: periféricos, CPU, memórias e dispositivos de entrada e saída.",
+    "Microsoft Windows (versão 10): conceito de pastas, diretórios, arquivos e atalhos, área de trabalho, área de transferência, manipulação de pastas, uso dos menus, programas e aplicativos.",
+    "Microsoft Word (versão 2019): estrutura básica dos documentos, edição e formatação de textos, cabeçalhos, parágrafos, fontes, colunas, marcadores simbólicos e numéricos, tabelas, impressão, controle de quebras e numeração de páginas, legendas, índices, inserção de objetos, campos predefinidos, caixas de texto.",
+    "Microsoft Excel (versão 2019): estrutura básica das planilhas, conceitos de células, linhas, colunas, pastas e gráficos, elaboração de tabelas e gráficos, uso de fórmulas, funções e macros, impressão, inserção de objetos, campos predefinidos, controle de quebras e numeração de páginas, obtenção de dados externos, classificação de dados.",
+    "Microsoft Power Point (versão 2019): estrutura básica das apresentações, conceitos de slides, anotações, régua, guias, cabeçalhos e rodapés, noções de edição e formatação de apresentações, inserção de objetos, numeração de páginas, botões de ação, animação e transição entre slides.",
+    "Internet: Navegação na Internet, manutenção dos endereços favoritos, utilização do histórico, conceitos de URL, links, sites, busca e impressão de páginas."
   ],
-
-  "Simulado": [""],
-
-  "Redação": [""]
+  "Direito Constitucional": [
+    "Dos Princípios Fundamentais.",
+    "Dos Direitos e Garantias Fundamentais: Dos direitos e deveres individuais e coletivos;",
+    "Dos direitos sociais;",
+    "Da nacionalidade.",
+    "Da Organização do Estado: Da organização político-administrativa;",
+    "Da administração pública.",
+    "Defesa do Estado e das instituições democráticas",
+    "Segurança pública."
+  ],
+  "Direito Penal": [
+    "Princípios básicos do direito penal.",
+    "Da aplicação da lei penal: lei penal no tempo e no espaço; tempo e lugar do crime, territorialidade e extraterritorialidade.",
+    "Do crime: classificação; fato típico e elementos; crime consumado e tentado; desistência voluntária e arrependimento eficaz; crime impossível; dolo e culpa; erro; ilicitude e causas de exclusão; excesso punível; culpabilidade.",
+    "Da Imputabilidade Penal. Concurso de pessoas e concurso de crimes.",
+    "Das penas: espécies e aplicação.",
+    "Dos crimes contra a pessoa. ",
+    "Dos crimes contra o patrimônio.", "Dos crimes contra a dignidade sexual.",
+    "Dos crimes contra a incolumidade pública.", 
+    "Dos crimes contra a paz pública.",
+    "Dos crimes contra a fé pública.", 
+    "Dos crimes contra a administração pública.",
+    "Dos crimes de perseguição (stalking – Lei nº 14.132/2021)."
+  ],
+  "Legislação Especial": [
+    "Lei nº 11.340/2006 - Violência Doméstica e Familiar contra a Mulher (Lei Maria da Penha).",
+    "Lei nº 8.069/1990 - Dos crimes contra a Criança e o Adolescente.",
+    "Lei nº 9.099/1995 - Dos crimes de menor potencial ofensivo.",
+    "Lei nº 9.605/1998 - Crimes contra o Meio Ambiente.",
+    "Lei nº 13.869/2019 - Lei de Abuso de Autoridade.",
+    "Lei nº 13.964/2019 - Lei Pacote Anticrime.",
+    "Lei nº 12.527/2011 - Lei de Acesso à Informação.",
+    "Decreto nº 19.841/1945 - Promulga Carta das Nações Unidas.",
+    "Decreto nº 592/1992 - Promulga o Pacto Internacional sobre Direitos Civis e Políticos.",
+    "Decreto nº 40/1991 - Promulga a Convenção contra Tortura e outros Tratamentos ou Penas Cruéis, Desumanos ou Degradantes."
+  ],
+  "Legislação Institucional": [
+    "Lei nº 3.529/1977 - Lei de Organização Básica da PMPI e atualizações.",
+    "Lei nº 3.808/1981 - Estatuto dos Policiais Militares do Estado do Piauí e atualizações.",
+    "Lei nº 7.725/2022 - Código de Ética e Disciplina dos Militares do Piauí.",
+    "Lei nº 5.378/2004 - Código de Vencimentos da PMPI e atualizações.",
+    "Lei Complementar nº 68/2006 - Lei de Promoção de Praças PMPI.",
+    "Decreto nº 12.422/2006 - Regulamento de Promoção de Praças.",
+    "Decreto-Lei nº 667/1969 - Reorganiza as Polícias Militares e Corpos de Bombeiros Militares e alterações.",
+    "Lei nº 13.954/2019 - Altera o Decreto-Lei 667/1969.",
+    "Lei nº 14.751/2023 - Lei Orgânica Nacional das Polícias Militares.",
+    "Decreto nº 88.777/1983 - Regulamento das Polícias Militares e Corpos de Bombeiros Militares (R-200) e atualizações."
+  ],
+  "Redação": ["Prática de Redação Oficial"],
+  "Simulado": ["Simulado Geral Pós-Edital"]
 };
+
+export const pesosDisciplinas = {
+  "Português": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 20 },
+  "RLM": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 20 },
+  "Conhecimentos Regionais": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
+  "Conhecimentos Gerais": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
+  "Informática": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
+  "Direito Constitucional": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 20 },
+  "Direito Penal": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 20 },
+  "Legislação Especial": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 20 },
+  "Legislação Institucional": { peso: 2, tipoEstudo: "leitura", metaQuestoes: 0 },
+  "Redação": { peso: 1, tipoEstudo: "leitura", metaQuestoes: 0 },
+  "Simulado": { peso: 0, tipoEstudo: "leitura", metaQuestoes: 0 }
+};
+
+export const cronogramaSemanal = {
+  "Segunda": ["Português", "Conhecimentos Regionais"],
+  "Terça": ["Direito Constitucional", "Conhecimentos Gerais"],
+  "Quarta": ["RLM", "Informática"],
+  "Quinta": ["Direito Penal", "Legislação Institucional"],
+  "Sexta": ["Legislação Especial", "Redação"],
+  "Sábado": ["Redação", "Simulado"],
+  "Domingo": ["Português", "RLM"]
+};
+
+export const metasRevisao = { questoesPorRevisao: 15 };
