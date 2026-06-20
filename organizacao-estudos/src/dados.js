@@ -1,35 +1,40 @@
 export const ciclo = [
   "Português", "RLM", "Conhecimentos Regionais", "Conhecimentos Gerais",
-  "Informática", "Direito Constitucional", "Direito Penal",
+  "Informática", "Direito Constitucional", "Direito Penal", "Direito Administrativo",
   "Legislação Especial", "Legislação Institucional", "Redação", "Simulado"
 ];
 
 export const assuntos = {
   "Português": [
-    "Compreensão, interpretação e análise de textos de gêneros diversos considerados em suas relações semântico-gramaticais.",
-    "Significação de palavras e expressões em contextos diversos.",
-    "A linguagem considerada em seus aspectos de variação e função. Estrutura e elementos de comunicação.",
-    "Vícios de linguagem; A linguagem figurada.",
-    "A Língua portuguesa em sua estrutura gramatical e em sua dimensão lógico-semântica: Aspectos fonológicos que incidem sobre a acentuação gráfica.",
-    "Morfologia: A palavra – estrutura, formação, classificação, flexão e emprego.",
-    "Sintaxe: A frase, a oração e o período; Período simples e período composto – Relações sintáticas entre termos da oração e entre orações.",
-    "Sintaxe de Concordância nominal e verbal, de Regência nominal e verbal. A crase.",
-    "Pontuação.",
-    "Ortografia oficial."
+    "Interpretação de textos",
+    "Denotação x Conotação; Sinonímia x Antonímia; Homonímia, Paronímia, Polissmia",
+    "Estrutura e elementos de comunicação, variações e funções de linguagem",
+    "Figuras de linguagem, pleonasmo e vícios de linguagem",
+    "Fonologia e acentuação gráfica",
+    "Morfologia: A palavra – estrutura, formação, classificação, flexão e emprego",
+    "Sintaxe: A frase, a oração e o período; Período simples e período composto – Relações sintáticas entre termos da oração e entre orações",
+    "Sintaxe de Concordância nominal e verbal, de Regência nominal e verbal",
+    "Pontuação",
+    " A crase"  
+  ],
+  "Direito Administrativo":[
+    "Estado, governo e adm pública - conceitos elementos, poderes, organização, natureza fins e PRINCIPIOS DO DIREITO ADM",
+    "Organização administrativa - Direta e Indireta",
+    "Poderes administrativos - Hierárquico, disciplinar, regulamentar, de polícia, uso e abuso de poder",
+    "Controle e responsabilização da adm: Controle administrativo, judicial e legislativo",
+    "Responsabilidade Civil do Estado",
+    "Sanções aplicáveis por prática de improbidade administrativa - 8.429/1992 e 14.230/2021"
   ],
   "RLM": [
-    "Noções de lógica matemática e lógica argumentativa: proposição simples, proposição composta, negação de proposição simples e composta, implicação, relação de equivalência, sentenças abertas, problemas de raciocínio lógico argumentativo matemático.",
-    "Conjuntos, tipos de conjuntos, relações de pertinência, inclusão, igualdade e desigualdade entre conjuntos, subconjuntos, união, intersecção, diferença de conjuntos e complementar de um conjunto.",
-    "Números naturais, inteiros, racionais, irracionais e reais: operações (adição, subtração, multiplicação, divisão, potenciação e radiciação), expressões numéricas, múltiplos e divisores de números, mínimo múltiplo comum e máximo divisor comum.",
-    "Frações: Propriedades, operações e problemas.",
-    "Razão, proporção, regra de três simples e composta, porcentagens, juros simples e juros compostos.",
-    "Geometria plana: Figuras geométricas simples: reta, semirreta, segmento, ângulo plano, polígonos planos, circunferência e círculo. Congruência de figuras planas. Semelhança de triângulos. Relações métricas nos triângulos, polígonos regulares e círculos. Áreas de polígonos, círculos, coroa e setor circular.",
-    "Geometria espacial: Prismas, pirâmides e respectivos troncos: cálculo de áreas e volumes. Cilindro, cone e esfera: cálculo de áreas e volumes.",
+    "Lógica argumentativa, proposições, negação, equivalências, problemas de RL, implicação",
+    "Conjuntos, tipos, união, intersecção",
+    "Operações básicas, expressões numéricas, múltiplos e divisores, MMC, MDC", 
+    "Frações: Propriedades, operações e problemas",
+    "Razão, proporção, regra de três simples e composta, porcentagens, juros simples e juros compostos",
+    "Geometria plana, semelhança de triângulos, áreas",
+    "Geometria espacial, tronco de prisma, pirâmide, cone, esfera, cilindro (área e volume)",
     "Medidas de comprimento, superfície, volume, capacidade, massa e tempo.",
     "Unidades de medidas: transformação das unidades de medidas.",
-    "Equação e inequação do 1º grau com até duas variáveis, equação e inequação do 2º grau e sistema de equações.",
-    "Função polinomial de 1º grau, função polinomial de 2º grau e funções exponencial e logarítmica.",
-    "Matrizes e sistemas lineares.",
     "Progressão aritmética e progressão geométrica.",
     "Probabilidade e análise combinatória."
   ],
@@ -42,9 +47,12 @@ export const assuntos = {
     "Questão ambiental no Piauí: problemas ambientais, degradação e conservação."
   ],
   "Conhecimentos Gerais": [
-    "Política e economia no espaço nacional e mundial. Disputas interimperialistas e transformações do espaço capitalista.",
-    "Os blocos econômicos e as potências globais e regionais no sistema internacional. Organismos Internacionais.",
-    "Globalização e Fragmentação do espaço. Conflitos étnicos, políticos e religiosos atuais.",
+    "Política e economia no espaço nacional e mundial. ",
+    "Disputas interimperialistas e transformações do espaço capitalista.",
+    "Os blocos econômicos e as potências globais e regionais no sistema internacional. ",
+    "Organismos Internacionais.",
+    "Globalização e Fragmentação do espaço. ",
+    "Conflitos étnicos, políticos e religiosos atuais.",
     "Exploração e usos dos recursos naturais e os desafios geopolíticos do século XXI.",
     "Relações econômicas entre o Brasil e o Mundo.",
     "O espaço brasileiro: população, economia e urbanização.",
@@ -59,23 +67,23 @@ export const assuntos = {
     "Internet: Navegação na Internet, manutenção dos endereços favoritos, utilização do histórico, conceitos de URL, links, sites, busca e impressão de páginas."
   ],
   "Direito Constitucional": [
-    "Dos Princípios Fundamentais.",
-    "Dos Direitos e Garantias Fundamentais: Dos direitos e deveres individuais e coletivos;",
-    "Dos direitos sociais;",
-    "Da nacionalidade.",
-    "Da Organização do Estado: Da organização político-administrativa;",
-    "Da administração pública.",
-    "Defesa do Estado e das instituições democráticas",
-    "Segurança pública."
+    "Dos Princípios Fundamentais. Art 1 ao 4",
+    "Dos direitos e deveres individuais e coletivos. Art 5",
+    "Dos direitos sociais. Art 6 ao 11",
+    "Da nacionalidade. Art 12 e 13",
+    "Da organização político-administrativa. art 18 e 19",
+    "Da administração pública. Art 37 ao 43",
+    "Segurança pública. Art 144"
   ],
   "Direito Penal": [
     "Princípios básicos do direito penal.",
-    "Da aplicação da lei penal: lei penal no tempo e no espaço; tempo e lugar do crime, territorialidade e extraterritorialidade.",
+    "Da aplicação da lei penal: No tempo, No espaço; tempo e lugar do crime, territorialidade e extraterritorialidade.",
     "Do crime: classificação; fato típico e elementos; crime consumado e tentado; desistência voluntária e arrependimento eficaz; crime impossível; dolo e culpa; erro; ilicitude e causas de exclusão; excesso punível; culpabilidade.",
     "Da Imputabilidade Penal. Concurso de pessoas e concurso de crimes.",
     "Das penas: espécies e aplicação.",
     "Dos crimes contra a pessoa. ",
-    "Dos crimes contra o patrimônio.", "Dos crimes contra a dignidade sexual.",
+    "Dos crimes contra o patrimônio.",
+    "Dos crimes contra a dignidade sexual.",
     "Dos crimes contra a incolumidade pública.", 
     "Dos crimes contra a paz pública.",
     "Dos crimes contra a fé pública.", 
@@ -83,16 +91,16 @@ export const assuntos = {
     "Dos crimes de perseguição (stalking – Lei nº 14.132/2021)."
   ],
   "Legislação Especial": [
-    "Lei nº 11.340/2006 - Violência Doméstica e Familiar contra a Mulher (Lei Maria da Penha).",
+    "Lei nº 11.340/2006 - Lei Maria da Penha.",
     "Lei nº 8.069/1990 - Dos crimes contra a Criança e o Adolescente.",
-    "Lei nº 9.099/1995 - Dos crimes de menor potencial ofensivo.",
+    "Lei nº 9.099/1995 - JECRIM.",
     "Lei nº 9.605/1998 - Crimes contra o Meio Ambiente.",
     "Lei nº 13.869/2019 - Lei de Abuso de Autoridade.",
     "Lei nº 13.964/2019 - Lei Pacote Anticrime.",
     "Lei nº 12.527/2011 - Lei de Acesso à Informação.",
     "Decreto nº 19.841/1945 - Promulga Carta das Nações Unidas.",
-    "Decreto nº 592/1992 - Promulga o Pacto Internacional sobre Direitos Civis e Políticos.",
-    "Decreto nº 40/1991 - Promulga a Convenção contra Tortura e outros Tratamentos ou Penas Cruéis, Desumanos ou Degradantes."
+    "Decreto nº 592/1992 - Pacto Internacional sobre Direitos Civis e Políticos.",
+    "Decreto nº 40/1991 - Convenção contra Tortura e outros Tratamentos ou Penas Cruéis, Desumanos ou Degradantes."
   ],
   "Legislação Institucional": [
     "Lei nº 3.529/1977 - Lei de Organização Básica da PMPI e atualizações.",
@@ -101,12 +109,11 @@ export const assuntos = {
     "Lei nº 5.378/2004 - Código de Vencimentos da PMPI e atualizações.",
     "Lei Complementar nº 68/2006 - Lei de Promoção de Praças PMPI.",
     "Decreto nº 12.422/2006 - Regulamento de Promoção de Praças.",
-    "Decreto-Lei nº 667/1969 - Reorganiza as Polícias Militares e Corpos de Bombeiros Militares e alterações.",
-    "Lei nº 13.954/2019 - Altera o Decreto-Lei 667/1969.",
+    "Decreto-Lei nº 667/1969 - Reorganiza as Polícias Militares e Corpos de Bombeiros Militares e alterações; Lei nº 13.954/2019",
     "Lei nº 14.751/2023 - Lei Orgânica Nacional das Polícias Militares.",
     "Decreto nº 88.777/1983 - Regulamento das Polícias Militares e Corpos de Bombeiros Militares (R-200) e atualizações."
   ],
-  "Redação": ["Prática de Redação Oficial"],
+  "Redação": ["Prática de Redação"],
   "Simulado": ["Simulado Geral Pós-Edital"]
 };
 
@@ -116,9 +123,9 @@ export const pesosDisciplinas = {
   "Conhecimentos Regionais": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
   "Conhecimentos Gerais": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
   "Informática": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
-  "Direito Constitucional": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 20 },
-  "Direito Penal": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 20 },
-  "Legislação Especial": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 20 },
+  "Direito Constitucional": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
+  "Direito Penal": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
+  "Legislação Especial": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
   "Legislação Institucional": { peso: 2, tipoEstudo: "leitura", metaQuestoes: 0 },
   "Redação": { peso: 1, tipoEstudo: "leitura", metaQuestoes: 0 },
   "Simulado": { peso: 0, tipoEstudo: "leitura", metaQuestoes: 0 }
