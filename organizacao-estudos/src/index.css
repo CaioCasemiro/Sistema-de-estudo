@@ -444,3 +444,103 @@ body {
     font-size: 1.4rem;
   }
 }
+
+.missao-card {
+
+  background: linear-gradient(135deg,
+      #151b2b 0%,
+      #0f1420 100%);
+
+  border: 2px solid var(--border-tac);
+
+  padding: 35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+
+  min-height: 280px;
+
+  position: relative;
+
+  transition: 0.3s;
+
+}
+
+
+.missao-card:hover {
+
+  border-color: var(--accent-ouro);
+
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.5);
+
+}
+
+
+
+.missao-card h4 {
+
+  text-align: center;
+
+  color: var(--accent-ouro);
+
+  font-size: 1.3rem;
+
+  letter-spacing: 3px;
+
+}
+
+
+
+.missao-card p {
+
+  background: rgba(0, 0, 0, 0.35);
+
+  border-left: 4px solid var(--accent-ouro);
+
+  padding: 20px;
+
+  min-height: 80px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  color: var(--text-secondary);
+
+  font-size: 1rem;
+
+}
+
+
+
+/* checkbox */
+
+.missao-card .checkbox {
+
+  padding: 12px;
+
+  border: 1px solid var(--border-tac);
+
+  background: rgba(0, 0, 0, 0.3);
+
+}
+
+
+
+/* botão */
+
+.missao-card .btn {
+
+  margin-top: auto;
+
+}

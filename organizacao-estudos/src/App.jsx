@@ -4,6 +4,14 @@ import { db } from "./firebase";
 import { doc, getDoc, updateDoc, collection, addDoc, query, getDocs } from "firebase/firestore";
 
 export default function App() {
+  const [acertosBasicos, setAcertosBasicos] = useState(0);
+  const [acertosEspecificos, setAcertosEspecificos] = useState(0);
+
+  const [redacoes, setRedacoes] = useState([]);
+  const [fezRedacao, setFezRedacao] = useState(false);
+
+  const [missoesExtras, setMissoesExtras] = useState([]);
+  const [statusMissoes, setStatusMissoes] = useState({});
   const [progresso, setProgresso] = useState({});
   const [desempenho, setDesempenho] = useState({});
   const [revisoes, setRevisoes] = useState({});
@@ -11,6 +19,35 @@ export default function App() {
   const [dadosMetas, setDadosMetas] = useState({});
   const [simulados, setSimulados] = useState([]);
   const [acertosSimulado, setAcertosSimulado] = useState(0);
+  const bancoMissoes = [
+    "10 questões - Interpretação de textos",
+    "10 questões - Fonologia e acentuação gráfica",
+    "10 questões - Pontuação",
+    "10 questões - Art 5 da Constituição",
+    "10 questões - Art 37 da Constituição",
+    "10 questões - Art 144 da Constituição",
+    "10 questões - Princípios do Direito Penal",
+    "10 questões - Crimes contra o patrimônio",
+    "10 questões - Lei Maria da Penha",
+    "10 questões - JECRIM",
+    "10 questões - Lei de Abuso de Autoridade",
+    "10 questões - Lei Orgânica Nacional das PMs",
+    "10 questões - Estatuto dos Policiais Militares",
+    "Leitura - Art 5 da CF",
+    "Leitura - Art 37 da CF",
+    "Leitura - Art 144 da CF",
+    "Leitura - Lei Maria da Penha",
+    "Leitura - Lei Orgânica Nacional das PMs",
+    "Leitura - Código de Ética PMPI",
+    "Revisar último assunto estudado",
+    "Revisar penúltimo assunto estudado",
+    "Resolver questões erradas anteriormente",
+    "15 minutos de PDF da matéria do dia",
+    "20 minutos de lei seca",
+    "Flashcards da matéria do dia",
+    "Mapa mental da matéria do dia",
+    "20 questões extras da matéria do dia"
+  ];
 
   const diaHoje = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][new Date().getDay()];
 
@@ -23,7 +60,7 @@ export default function App() {
         if (d.exists()) setDesempenho(d.data());
         const r = await getDoc(doc(db, "revisoes", "materias"));
         if (r.exists()) setRevisoes(r.data());
-        
+
         const q = query(collection(db, "simulados"));
         const querySnapshot = await getDocs(q);
         const sims = [];
@@ -50,6 +87,18 @@ export default function App() {
     const inicial = {};
     metas.forEach((m, i) => (inicial[i] = { estudado: false, acertos: 0, erros: 0 }));
     setDadosMetas(inicial);
+    const missoes = [];
+
+    while (missoes.length < 2) {
+      const aleatoria =
+        bancoMissoes[Math.floor(Math.random() * bancoMissoes.length)];
+
+      if (!missoes.includes(aleatoria)) {
+        missoes.push(aleatoria);
+      }
+    }
+
+    setMissoesExtras(missoes);
   }, [diaHoje, revisoes, progresso]);
 
   async function salvar(i, dados) {
@@ -73,24 +122,79 @@ export default function App() {
 
     const revAtu = revisoes[meta.materia]?.[idx] || { questoesRevisao: 0 };
     const novasQ = meta.tipo === "nova" ? 0 : revAtu.questoesRevisao + (dados.acertos + dados.erros);
-    await updateDoc(doc(db, "revisoes", "materias"), { 
-      [`${meta.materia}.${idx}`]: { questoesRevisao: novasQ, last: new Date().toISOString() } 
+    await updateDoc(doc(db, "revisoes", "materias"), {
+      [`${meta.materia}.${idx}`]: { questoesRevisao: novasQ, last: new Date().toISOString() }
     }, { merge: true });
 
     alert("Salvo!"); window.location.reload();
   }
 
   async function salvarSimulado() {
-    if (acertosSimulado < 0 || acertosSimulado > 40) { alert("0 a 40!"); return; }
-    await addDoc(collection(db, "simulados"), { acertos: acertosSimulado, total: 40, porcentagem: Math.round((acertosSimulado/40)*100), data: new Date().toISOString() });
-    alert("Simulado salvo!"); window.location.reload();
+
+    if (
+      acertosBasicos < 0 ||
+      acertosBasicos > 20 ||
+      acertosEspecificos < 0 ||
+      acertosEspecificos > 20
+    ) {
+      alert("Cada bloco deve ficar entre 0 e 20.");
+      return;
+    }
+
+    const notaFinal =
+      (acertosBasicos * 1) +
+      (acertosEspecificos * 2);
+
+    const porcentagem = Math.round(
+      (notaFinal / 60) * 100
+    );
+
+    await addDoc(collection(db, "simulados"), {
+      basicos: acertosBasicos,
+      especificos: acertosEspecificos,
+      notaFinal,
+      porcentagem,
+      data: new Date().toISOString()
+    });
+
+    alert("Simulado salvo!");
+    window.location.reload();
+  }
+
+  async function salvarRedacao() {
+
+    await addDoc(collection(db, "redacoes"), {
+      fez: fezRedacao,
+      data: new Date().toISOString()
+    });
+
+    alert("Redação registrada!");
+    window.location.reload();
+  }
+
+  async function salvarMissao(index) {
+
+    await addDoc(collection(db, "missoesExtras"), {
+
+      missao: missoesExtras[index],
+
+      concluida: statusMissoes[index],
+
+      data: new Date().toISOString()
+
+    });
+
+
+    alert("Missão registrada!");
+
   }
 
   return (
     <div className="container">
       <header className="header">
-        <h1>{diaHoje.toUpperCase()}</h1>
-        <p>{new Date().toLocaleDateString("pt-BR")}</p>
+
+        <h1>Pós-edital: {diaHoje.toUpperCase()}</h1>
+        <h2>{new Date().toLocaleDateString("pt-BR")}</h2>
       </header>
 
       <div className="metas-wrapper">
@@ -99,14 +203,77 @@ export default function App() {
           if (m.materia === "Simulado") return (
             <div className="card simulado" key={i}>
               <span className="badge">SIMULADO</span>
-              <h2>{m.materia}</h2>
+
+              <h2>Simulado</h2>
+
               <div className="simulado-input">
-                <input type="number" value={acertosSimulado} onChange={e => setAcertosSimulado(parseInt(e.target.value))} />
-                <p>{Math.round((acertosSimulado/40)*100)}%</p>
+
+                <p>Acertos Básicos (0-20)</p>
+
+                <input
+                  type="number"
+                  value={acertosBasicos}
+                  onChange={(e) =>
+                    setAcertosBasicos(parseInt(e.target.value) || 0)
+                  }
+                />
+
+                <p>Acertos Específicos (0-20)</p>
+
+                <input
+                  type="number"
+                  value={acertosEspecificos}
+                  onChange={(e) =>
+                    setAcertosEspecificos(parseInt(e.target.value) || 0)
+                  }
+                />
+
+                <h3>
+                  Nota:
+                  {(acertosBasicos * 1) +
+                    (acertosEspecificos * 2)}
+                  / 60
+                </h3>
+
               </div>
-              <button className="btn" onClick={salvarSimulado}>Salvar Simulado</button>
+
+              <button
+                className="btn"
+                onClick={salvarSimulado}
+              >
+                Salvar Simulado
+              </button>
+
             </div>
           );
+
+          if (m.materia === "Redação") {
+            return (
+              <div className="card" key={i}>
+                <span className="badge">REDAÇÃO</span>
+
+                <h2>Redação</h2>
+
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    checked={fezRedacao}
+                    onChange={(e) =>
+                      setFezRedacao(e.target.checked)
+                    }
+                  />
+                  <span>Fiz a redação</span>
+                </label>
+
+                <button
+                  className="btn"
+                  onClick={salvarRedacao}
+                >
+                  Salvar
+                </button>
+              </div>
+            );
+          }
 
           return (
             <div className={`card ${m.tipo}`} key={i}>
@@ -114,8 +281,8 @@ export default function App() {
               <h2>{m.materia}</h2>
               <p className="assunto">{m.tipo === "revisao" ? m.assunto : assuntos[m.materia]?.[idx]}</p>
               <div className="inputs">
-                <input type="number" placeholder="Acertos" onChange={e => setDadosMetas({...dadosMetas, [i]: {...dadosMetas[i], acertos: parseInt(e.target.value)||0}})} />
-                <input type="number" placeholder="Erros" onChange={e => setDadosMetas({...dadosMetas, [i]: {...dadosMetas[i], erros: parseInt(e.target.value)||0}})} />
+                <input type="number" placeholder="Acertos" onChange={e => setDadosMetas({ ...dadosMetas, [i]: { ...dadosMetas[i], acertos: parseInt(e.target.value) || 0 } })} />
+                <input type="number" placeholder="Erros" onChange={e => setDadosMetas({ ...dadosMetas, [i]: { ...dadosMetas[i], erros: parseInt(e.target.value) || 0 } })} />
               </div>
               <button className="btn" onClick={() => salvar(i, dadosMetas[i])}>Salvar</button>
             </div>
@@ -124,12 +291,85 @@ export default function App() {
       </div>
 
       <section className="dashboard">
+
+        <h2>Missões Extras</h2>
+
+
+        <div className="dashboard-grid">
+
+          {missoesExtras.map((missao, idx) => (
+
+            <div
+              key={idx}
+              className="missao-card"
+            >
+
+              <h4>MISSÃO {idx + 1}</h4>
+
+              <p>
+                {missao}
+              </p>
+
+
+              <label className="checkbox">
+
+                <input
+                  type="checkbox"
+
+                  checked={
+                    statusMissoes[idx] === true
+                  }
+
+                  onChange={(e) => {
+
+                    setStatusMissoes({
+
+                      ...statusMissoes,
+
+                      [idx]: e.target.checked
+
+                    })
+
+                  }}
+
+                />
+
+                <span>
+                  Consegui
+                </span>
+
+              </label>
+
+
+              <button
+                className="btn"
+
+                onClick={() => salvarMissao(idx)}
+
+              >
+
+                Registrar
+
+              </button>
+
+
+            </div>
+
+          ))}
+
+        </div>
+
+
+      </section>
+
+
+      <section className="dashboard">
         <h2>Desempenho por Matéria</h2>
         <div className="dashboard-grid">
           {ciclo.map(m => {
-            let a=0, e=0, t=0;
-            for(let idx in desempenho[m]) { a+=desempenho[m][idx].acertos; e+=desempenho[m][idx].erros; t+=desempenho[m][idx].total; }
-            const p = t>0 ? Math.round((a/t)*100) : 0;
+            let a = 0, e = 0, t = 0;
+            for (let idx in (desempenho[m] || {})) { a += desempenho[m][idx].acertos; e += desempenho[m][idx].erros; t += desempenho[m][idx].total; }
+            const p = t > 0 ? Math.round((a / t) * 100) : 0;
             return <div className="dashboard-item" key={m}><h4>{m}</h4><p>{p}% ({a}/{t})</p></div>;
           })}
         </div>
@@ -138,7 +378,7 @@ export default function App() {
       <section className="simulados-historico">
         <h2>Últimos Simulados</h2>
         <div className="simulados-list">
-          {simulados.map(s => <div className="simulado-item" key={s.id}>{new Date(s.data).toLocaleDateString()} - <b>{s.acertos}/40</b> ({s.porcentagem}%)</div>)}
+          {simulados.map(s => <div className="simulado-item" key={s.id}>{new Date(s.data).toLocaleDateString()} - <b>{s.notaFinal}/60</b> ({s.porcentagem}%)</div>)}
         </div>
       </section>
     </div>
