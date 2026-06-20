@@ -124,6 +124,7 @@ export const pesosDisciplinas = {
   "Conhecimentos Gerais": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
   "Informática": { peso: 1, tipoEstudo: "questoes", metaQuestoes: 10 },
   "Direito Constitucional": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
+  "Direito Administrativo": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
   "Direito Penal": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
   "Legislação Especial": { peso: 2, tipoEstudo: "questoes", metaQuestoes: 30 },
   "Legislação Institucional": { peso: 2, tipoEstudo: "leitura", metaQuestoes: 0 },
