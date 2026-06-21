@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { ciclo, assuntos, pesosDisciplinas, cronogramaSemanal, metasRevisao } from "./dados";
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc, collection, addDoc, query, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  collection,
+  addDoc,
+  query,
+  getDocs
+} from "firebase/firestore";
 
 export default function App() {
   const [acertosBasicos, setAcertosBasicos] = useState(0);
@@ -9,7 +18,7 @@ export default function App() {
 
   const [redacoes, setRedacoes] = useState([]);
   const [fezRedacao, setFezRedacao] = useState(false);
-
+  const [questoes, setQuestoes] = useState({});
   const [missoesExtras, setMissoesExtras] = useState([]);
   const [statusMissoes, setStatusMissoes] = useState({});
   const [progresso, setProgresso] = useState({});
@@ -106,12 +115,16 @@ export default function App() {
     const idx = meta.tipo === "revisao" ? meta.assuntoIndex : (progresso[meta.materia] || 0);
 
     if (meta.tipo === "nova") {
-      await updateDoc(doc(db, "progresso", "materias"), { [meta.materia]: idx + 1 });
+      await setDoc(
+  doc(db, "progresso", "materias"),
+  { [meta.materia]: idx + 1 },
+  { merge: true }
+);
     }
 
     if (pesosDisciplinas[meta.materia].tipoEstudo === "questoes") {
       const des = desempenho[meta.materia]?.[idx] || { acertos: 0, erros: 0, total: 0 };
-      await updateDoc(doc(db, "desempenho", "materias"), {
+      await setDoc(doc(db, "desempenho", "materias"), {
         [`${meta.materia}.${idx}`]: {
           acertos: des.acertos + dados.acertos,
           erros: des.erros + dados.erros,
@@ -122,7 +135,7 @@ export default function App() {
 
     const revAtu = revisoes[meta.materia]?.[idx] || { questoesRevisao: 0 };
     const novasQ = meta.tipo === "nova" ? 0 : revAtu.questoesRevisao + (dados.acertos + dados.erros);
-    await updateDoc(doc(db, "revisoes", "materias"), {
+    await setDoc(doc(db, "revisoes", "materias"), {
       [`${meta.materia}.${idx}`]: { questoesRevisao: novasQ, last: new Date().toISOString() }
     }, { merge: true });
 
