@@ -123,122 +123,135 @@ export default function App() {
   }
   
   async function salvar(i, dados) {
-    const meta = metasHoje[i];
-    const idx = meta.tipo === "revisao" ? meta.assuntoIndex : (progresso[meta.materia] || 0);
 
-   if (meta.tipo === "nova") {
+  const meta = metasHoje[i];
+
+  const idx =
+    meta.tipo === "revisao"
+      ? meta.assuntoIndex
+      : (progresso[meta.materia] || 0);
+
+  if (meta.tipo === "nova") {
+
+    await setDoc(
+      doc(db, "progresso", "materias"),
+      {
+        [meta.materia]: idx + 1
+      },
+      { merge: true }
+    );
+
+  }
+
+  if (
+    pesosDisciplinas[meta.materia]
+      .tipoEstudo === "questoes"
+  ) {
+
+    const des =
+      desempenho[meta.materia]?.[idx]
+      || {
+        acertos: 0,
+        erros: 0,
+        total: 0
+      };
+
+    await setDoc(
+      doc(db, "desempenho", "materias"),
+      {
+
+        [meta.materia]: {
+
+          ...(desempenho[meta.materia] || {}),
+
+          [idx]: {
+
+            acertos:
+              des.acertos +
+              dados.acertos,
+
+            erros:
+              des.erros +
+              dados.erros,
+
+            total:
+              des.total +
+              dados.acertos +
+              dados.erros
+
+          }
+
+        }
+
+      },
+      { merge: true }
+    );
+
+  }
+
+  const agora = new Date();
+
+  const revAtu =
+    revisoes[meta.materia]?.[idx]
+    || {};
+
+  const novasQ =
+    meta.tipo === "nova"
+      ? 0
+      : (revAtu.questoesRevisao || 0)
+      + (dados.acertos + dados.erros);
 
   await setDoc(
-    doc(db, "progresso", "materias"),
-    {
-      [meta.materia]: idx + 1
-    },
-    { merge: true }
-  );
-
-   }
-
-    if (
-  pesosDisciplinas[meta.materia]
-    .tipoEstudo === "questoes"
-) {
-
-  const des =
-    desempenho[meta.materia]?.[idx]
-    || {
-      acertos: 0,
-      erros: 0,
-      total: 0
-    };
-
-  await setDoc(
-    doc(db, "desempenho", "materias"),
+    doc(db, "revisoes", "materias"),
     {
 
       [meta.materia]: {
 
-        ...(desempenho[meta.materia] || {}),
+        ...(revisoes[meta.materia] || {}),
 
         [idx]: {
 
-          acertos:
-            des.acertos +
-            dados.acertos,
+          questoesRevisao: novasQ,
 
-          erros:
-            des.erros +
-            dados.erros,
+          revisao24h:
+            revAtu.revisao24h ||
+            adicionarDias(agora, 1),
 
-          total:
-            des.total +
-            dados.acertos +
-            dados.erros
+          revisao7d:
+            revAtu.revisao7d ||
+            adicionarDias(agora, 7),
+
+          revisao30d:
+            revAtu.revisao30d ||
+            adicionarDias(agora, 30),
+
+          concluido24h:
+            revAtu.concluido24h || false,
+
+          concluido7d:
+            revAtu.concluido7d || false,
+
+          concluido30d:
+            revAtu.concluido30d || false,
+
+          last: agora.toISOString()
 
         }
+
       }
+
     },
     { merge: true }
   );
 
-    }
+  alert("Salvo!");
 
-    const agora = new Date();
+  window.location.reload();
 
-const revAtu =
-  revisoes[meta.materia]?.[idx] || {};
-
-const novasQ =
-  meta.tipo === "nova"
-    ? 0
-    : (revAtu.questoesRevisao || 0)
-      + (dados.acertos + dados.erros);
-
-await setDoc(
-await setDoc(
-  doc(db, "revisoes", "materias"),
-  {
-    [meta.materia]: {
-
-      ...(revisoes[meta.materia] || {}),
-
-      [idx]: {
-
-        questoesRevisao: novasQ,
-
-        revisao24h:
-          revAtu.revisao24h ||
-          adicionarDias(agora, 1),
-
-        revisao7d:
-          revAtu.revisao7d ||
-          adicionarDias(agora, 7),
-
-        revisao30d:
-          revAtu.revisao30d ||
-          adicionarDias(agora, 30),
-
-        concluido24h:
-          revAtu.concluido24h || false,
-
-        concluido7d:
-          revAtu.concluido7d || false,
-
-        concluido30d:
-          revAtu.concluido30d || false,
-
-        last: agora.toISOString()
-
-      }
-
-    }
-
-  },
-  { merge: true }
-);
-
-    alert("Salvo!"); window.location.reload();
   }
 
+
+  
   async function salvarSimulado() {
 
     if (
