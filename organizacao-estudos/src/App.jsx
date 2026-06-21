@@ -126,40 +126,60 @@ export default function App() {
     const meta = metasHoje[i];
     const idx = meta.tipo === "revisao" ? meta.assuntoIndex : (progresso[meta.materia] || 0);
 
-    if (meta.tipo === "nova") {
-      await setDoc(
-  doc(db, "desempenho", "materias"),
-  {
-    [meta.materia]: {
-      ...(desempenho[meta.materia] || {}),
+   if (meta.tipo === "nova") {
 
-      [idx]: {
-        acertos:
-          des.acertos + dados.acertos,
+  await setDoc(
+    doc(db, "progresso", "materias"),
+    {
+      [meta.materia]: idx + 1
+    },
+    { merge: true }
+  );
 
-        erros:
-          des.erros + dados.erros,
+   }
 
-        total:
-          des.total +
-          dados.acertos +
-          dados.erros
-      }
-    }
-  },
-  { merge: true }
-);
-    }
+    if (
+  pesosDisciplinas[meta.materia]
+    .tipoEstudo === "questoes"
+) {
 
-    if (pesosDisciplinas[meta.materia].tipoEstudo === "questoes") {
-      const des = desempenho[meta.materia]?.[idx] || { acertos: 0, erros: 0, total: 0 };
-      await setDoc(doc(db, "desempenho", "materias"), {
-        [`${meta.materia}.${idx}`]: {
-          acertos: des.acertos + dados.acertos,
-          erros: des.erros + dados.erros,
-          total: des.total + dados.acertos + dados.erros
+  const des =
+    desempenho[meta.materia]?.[idx]
+    || {
+      acertos: 0,
+      erros: 0,
+      total: 0
+    };
+
+  await setDoc(
+    doc(db, "desempenho", "materias"),
+    {
+
+      [meta.materia]: {
+
+        ...(desempenho[meta.materia] || {}),
+
+        [idx]: {
+
+          acertos:
+            des.acertos +
+            dados.acertos,
+
+          erros:
+            des.erros +
+            dados.erros,
+
+          total:
+            des.total +
+            dados.acertos +
+            dados.erros
+
         }
-      }, { merge: true });
+      }
+    },
+    { merge: true }
+  );
+
     }
 
     const agora = new Date();
@@ -174,40 +194,45 @@ const novasQ =
       + (dados.acertos + dados.erros);
 
 await setDoc(
+await setDoc(
   doc(db, "revisoes", "materias"),
   {
+
     [meta.materia]: {
-  ...(revisoes[meta.materia] || {}),
 
-  [idx]:  {
+      ...(revisoes[meta.materia] || {}),
 
-      questoesRevisao: novasQ,
+      [idx]: {
 
-      revisao24h:
-        revAtu.revisao24h ||
-        adicionarDias(agora,1),
+        questoesRevisao: novasQ,
 
-      revisao7d:
-        revAtu.revisao7d ||
-        adicionarDias(agora,7),
+        revisao24h:
+          revAtu.revisao24h ||
+          adicionarDias(agora, 1),
 
-      revisao30d:
-        revAtu.revisao30d ||
-        adicionarDias(agora,20),
+        revisao7d:
+          revAtu.revisao7d ||
+          adicionarDias(agora, 7),
 
-      concluido24h:
-        revAtu.concluido24h || false,
+        revisao30d:
+          revAtu.revisao30d ||
+          adicionarDias(agora, 30),
 
-      concluido7d:
-        revAtu.concluido7d || false,
+        concluido24h:
+          revAtu.concluido24h || false,
 
-      concluido30d:
-        revAtu.concluido30d || false,
+        concluido7d:
+          revAtu.concluido7d || false,
 
-      last: agora.toISOString()
+        concluido30d:
+          revAtu.concluido30d || false,
+
+        last: agora.toISOString()
+
+      }
     }
   },
-  { merge:true }
+  { merge: true }
 );
 
     alert("Salvo!"); window.location.reload();
