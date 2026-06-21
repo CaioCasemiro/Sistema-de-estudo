@@ -128,8 +128,25 @@ export default function App() {
 
     if (meta.tipo === "nova") {
       await setDoc(
-  doc(db, "progresso", "materias"),
-  { [meta.materia]: idx + 1 },
+  doc(db, "desempenho", "materias"),
+  {
+    [meta.materia]: {
+      ...(desempenho[meta.materia] || {}),
+
+      [idx]: {
+        acertos:
+          des.acertos + dados.acertos,
+
+        erros:
+          des.erros + dados.erros,
+
+        total:
+          des.total +
+          dados.acertos +
+          dados.erros
+      }
+    }
+  },
   { merge: true }
 );
     }
@@ -159,7 +176,10 @@ const novasQ =
 await setDoc(
   doc(db, "revisoes", "materias"),
   {
-    [`${meta.materia}.${idx}`]: {
+    [meta.materia]: {
+  ...(revisoes[meta.materia] || {}),
+
+  [idx]:  {
 
       questoesRevisao: novasQ,
 
