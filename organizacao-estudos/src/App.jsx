@@ -197,7 +197,6 @@ await setDoc(
 await setDoc(
   doc(db, "revisoes", "materias"),
   {
-
     [meta.materia]: {
 
       ...(revisoes[meta.materia] || {}),
@@ -230,7 +229,9 @@ await setDoc(
         last: agora.toISOString()
 
       }
+
     }
+
   },
   { merge: true }
 );
