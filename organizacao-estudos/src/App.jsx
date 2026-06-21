@@ -110,6 +110,18 @@ export default function App() {
     setMissoesExtras(missoes);
   }, [diaHoje, revisoes, progresso]);
 
+  function adicionarDias(data, dias) {
+
+  const nova = new Date(data);
+
+  nova.setDate(
+    nova.getDate() + dias
+  );
+
+  return nova.toISOString();
+
+  }
+  
   async function salvar(i, dados) {
     const meta = metasHoje[i];
     const idx = meta.tipo === "revisao" ? meta.assuntoIndex : (progresso[meta.materia] || 0);
@@ -133,11 +145,50 @@ export default function App() {
       }, { merge: true });
     }
 
-    const revAtu = revisoes[meta.materia]?.[idx] || { questoesRevisao: 0 };
-    const novasQ = meta.tipo === "nova" ? 0 : revAtu.questoesRevisao + (dados.acertos + dados.erros);
-    await setDoc(doc(db, "revisoes", "materias"), {
-      [`${meta.materia}.${idx}`]: { questoesRevisao: novasQ, last: new Date().toISOString() }
-    }, { merge: true });
+    const agora = new Date();
+
+const revAtu =
+  revisoes[meta.materia]?.[idx] || {};
+
+const novasQ =
+  meta.tipo === "nova"
+    ? 0
+    : (revAtu.questoesRevisao || 0)
+      + (dados.acertos + dados.erros);
+
+await setDoc(
+  doc(db, "revisoes", "materias"),
+  {
+    [`${meta.materia}.${idx}`]: {
+
+      questoesRevisao: novasQ,
+
+      revisao24h:
+        revAtu.revisao24h ||
+        adicionarDias(agora,1),
+
+      revisao7d:
+        revAtu.revisao7d ||
+        adicionarDias(agora,7),
+
+      revisao30d:
+        revAtu.revisao30d ||
+        adicionarDias(agora,20),
+
+      concluido24h:
+        revAtu.concluido24h || false,
+
+      concluido7d:
+        revAtu.concluido7d || false,
+
+      concluido30d:
+        revAtu.concluido30d || false,
+
+      last: agora.toISOString()
+    }
+  },
+  { merge:true }
+);
 
     alert("Salvo!"); window.location.reload();
   }
