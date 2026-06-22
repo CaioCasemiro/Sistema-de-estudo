@@ -275,6 +275,7 @@ body {
   border-radius: 0;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(212, 175, 55, 0.02);
   position: relative;
+  margin-bottom: 10px;
 }
 
 .dashboard::before,
@@ -290,6 +291,7 @@ body {
   color: var(--accent-ouro);
   font-weight: 900;
   letter-spacing: 2px;
+  
 }
 
 .dashboard h2,

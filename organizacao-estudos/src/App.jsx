@@ -5,17 +5,17 @@ import {
   doc,
   getDoc,
   updateDoc,
-  setDoc,
   collection,
   addDoc,
   query,
-  getDocs
+  getDocs,
+  setDoc
 } from "firebase/firestore";
 
 export default function App() {
   const [acertosBasicos, setAcertosBasicos] = useState(0);
   const [acertosEspecificos, setAcertosEspecificos] = useState(0);
-
+  const [revisoesHoje, setRevisoesHoje] = useState([]);
   const [redacoes, setRedacoes] = useState([]);
   const [fezRedacao, setFezRedacao] = useState(false);
   const [questoes, setQuestoes] = useState({});
@@ -75,6 +75,25 @@ export default function App() {
         const sims = [];
         querySnapshot.forEach(doc => sims.push({ id: doc.id, ...doc.data() }));
         setSimulados(sims.sort((a, b) => new Date(b.data) - new Date(a.data)));
+        const hoje = new Date()
+          .toISOString()
+          .split("T")[0];
+
+        const missaoDoc = await getDoc(
+          doc(
+            db,
+            "missoesDiarias",
+            hoje
+          )
+        );
+
+        if (missaoDoc.exists()) {
+
+          setMissoesExtras(
+            missaoDoc.data().missoes
+          );
+
+        }
       } catch (e) { console.error(e); }
     }
     carregar();
@@ -83,101 +102,209 @@ export default function App() {
   useEffect(() => {
     const materias = cronogramaSemanal[diaHoje] || [];
     const metas = [];
+    const revisoesPendentes = [];
     for (const m in revisoes) {
       for (const idx in revisoes[m]) {
         const rev = revisoes[m][idx];
         if (rev.questoesRevisao < metasRevisao.questoesPorRevisao) {
-          metas.unshift({ tipo: "revisao", materia: m, assuntoIndex: parseInt(idx), assunto: assuntos[m][idx], feitas: rev.questoesRevisao || 0 });
+          revisoesPendentes.push({
+            tipo: "revisao",
+            materia: m,
+            assuntoIndex: parseInt(idx),
+            assunto: assuntos[m][idx],
+            feitas: rev.questoesRevisao || 0
+          });
         }
       }
     }
     materias.forEach(m => metas.push({ tipo: "nova", materia: m }));
+    setRevisoesHoje(revisoesPendentes);
     setMetasHoje(metas);
     const inicial = {};
     metas.forEach((m, i) => (inicial[i] = { estudado: false, acertos: 0, erros: 0 }));
     setDadosMetas(inicial);
-    const missoes = [];
+    if (missoesExtras.length === 0) {
 
-    while (missoes.length < 2) {
-      const aleatoria =
-        bancoMissoes[Math.floor(Math.random() * bancoMissoes.length)];
+      async function carregarMissoesDoDia() {
 
-      if (!missoes.includes(aleatoria)) {
-        missoes.push(aleatoria);
+        const hoje = new Date()
+          .toISOString()
+          .split("T")[0];
+
+        const missaoDoc = await getDoc(
+          doc(db, "missoesDiarias", hoje)
+        );
+
+        if (missaoDoc.exists()) {
+          setMissoesExtras(
+            missaoDoc.data().missoes
+          );
+          return;
+        }
+
+        const missoes = [];
+
+        while (missoes.length < 2) {
+
+          const aleatoria =
+            bancoMissoes[
+            Math.floor(
+              Math.random() *
+              bancoMissoes.length
+            )
+            ];
+
+          if (!missoes.includes(aleatoria)) {
+            missoes.push(aleatoria);
+          }
+        }
+
+        await setDoc(
+          doc(db, "missoesDiarias", hoje),
+          {
+            data: hoje,
+            missoes
+          }
+        );
+
+        setMissoesExtras(missoes);
       }
+
+      carregarMissoesDoDia();
+
+      
+
+
     }
 
-    setMissoesExtras(missoes);
+    
   }, [diaHoje, revisoes, progresso]);
 
   function adicionarDias(data, dias) {
 
-  const nova = new Date(data);
+    const nova = new Date(data);
 
-  nova.setDate(
-    nova.getDate() + dias
-  );
-
-  return nova.toISOString();
-
-  }
-  
-  async function salvar(i, dados) {
-
-  const meta = metasHoje[i];
-
-  const idx =
-    meta.tipo === "revisao"
-      ? meta.assuntoIndex
-      : (progresso[meta.materia] || 0);
-
-  if (meta.tipo === "nova") {
-
-    await setDoc(
-      doc(db, "progresso", "materias"),
-      {
-        [meta.materia]: idx + 1
-      },
-      { merge: true }
+    nova.setDate(
+      nova.getDate() + dias
     );
 
+    return nova.toISOString();
+
   }
 
-  if (
-    pesosDisciplinas[meta.materia]
-      .tipoEstudo === "questoes"
-  ) {
+  async function salvar(i, dados) {
 
-    const des =
-      desempenho[meta.materia]?.[idx]
-      || {
-        acertos: 0,
-        erros: 0,
-        total: 0
-      };
+    const meta = metasHoje[i];
+
+    const idx =
+      meta.tipo === "revisao"
+        ? meta.assuntoIndex
+        : (progresso[meta.materia] || 0);
+
+    if (meta.tipo === "nova") {
+
+      await setDoc(
+        doc(db, "progresso", "materias"),
+        {
+          [meta.materia]: idx + 1
+        },
+        { merge: true }
+      );
+
+    }
+
+    if (
+      pesosDisciplinas[meta.materia]
+        .tipoEstudo === "questoes"
+    ) {
+
+      const des =
+        desempenho[meta.materia]?.[idx]
+        || {
+          acertos: 0,
+          erros: 0,
+          total: 0
+        };
+
+      await setDoc(
+        doc(db, "desempenho", "materias"),
+        {
+
+          [meta.materia]: {
+
+            ...(desempenho[meta.materia] || {}),
+
+            [idx]: {
+
+              acertos:
+                des.acertos +
+                dados.acertos,
+
+              erros:
+                des.erros +
+                dados.erros,
+
+              total:
+                des.total +
+                dados.acertos +
+                dados.erros
+
+            }
+
+          }
+
+        },
+        { merge: true }
+      );
+
+    }
+
+    const agora = new Date();
+
+    const revAtu =
+      revisoes[meta.materia]?.[idx]
+      || {};
+
+    const novasQ =
+      meta.tipo === "nova"
+        ? 0
+        : (revAtu.questoesRevisao || 0)
+        + (dados.acertos + dados.erros);
 
     await setDoc(
-      doc(db, "desempenho", "materias"),
+      doc(db, "revisoes", "materias"),
       {
 
         [meta.materia]: {
 
-          ...(desempenho[meta.materia] || {}),
+          ...(revisoes[meta.materia] || {}),
 
           [idx]: {
 
-            acertos:
-              des.acertos +
-              dados.acertos,
+            questoesRevisao: novasQ,
 
-            erros:
-              des.erros +
-              dados.erros,
+            revisao24h:
+              revAtu.revisao24h ||
+              adicionarDias(agora, 1),
 
-            total:
-              des.total +
-              dados.acertos +
-              dados.erros
+            revisao7d:
+              revAtu.revisao7d ||
+              adicionarDias(agora, 7),
+
+            revisao30d:
+              revAtu.revisao30d ||
+              adicionarDias(agora, 30),
+
+            concluido24h:
+              revAtu.concluido24h || false,
+
+            concluido7d:
+              revAtu.concluido7d || false,
+
+            concluido30d:
+              revAtu.concluido30d || false,
+
+            last: agora.toISOString()
 
           }
 
@@ -187,71 +314,14 @@ export default function App() {
       { merge: true }
     );
 
-  }
+    alert("Salvo!");
 
-  const agora = new Date();
-
-  const revAtu =
-    revisoes[meta.materia]?.[idx]
-    || {};
-
-  const novasQ =
-    meta.tipo === "nova"
-      ? 0
-      : (revAtu.questoesRevisao || 0)
-      + (dados.acertos + dados.erros);
-
-  await setDoc(
-    doc(db, "revisoes", "materias"),
-    {
-
-      [meta.materia]: {
-
-        ...(revisoes[meta.materia] || {}),
-
-        [idx]: {
-
-          questoesRevisao: novasQ,
-
-          revisao24h:
-            revAtu.revisao24h ||
-            adicionarDias(agora, 1),
-
-          revisao7d:
-            revAtu.revisao7d ||
-            adicionarDias(agora, 7),
-
-          revisao30d:
-            revAtu.revisao30d ||
-            adicionarDias(agora, 30),
-
-          concluido24h:
-            revAtu.concluido24h || false,
-
-          concluido7d:
-            revAtu.concluido7d || false,
-
-          concluido30d:
-            revAtu.concluido30d || false,
-
-          last: agora.toISOString()
-
-        }
-
-      }
-
-    },
-    { merge: true }
-  );
-
-  alert("Salvo!");
-
-  window.location.reload();
+    window.location.reload();
 
   }
 
 
-  
+
   async function salvarSimulado() {
 
     if (
@@ -319,6 +389,39 @@ export default function App() {
         <h1>Pós-edital: {diaHoje.toUpperCase()}</h1>
         <h2>{new Date().toLocaleDateString("pt-BR")}</h2>
       </header>
+
+      {revisoesHoje.length > 0 && (
+
+        <section className="dashboard">
+
+          <h2>Revisões Pendentes</h2>
+
+          <div className="dashboard-grid">
+
+            {revisoesHoje.map((r, i) => (
+
+              <div
+                className="dashboard-item"
+                key={i}
+              >
+
+                <h4>{r.materia}</h4>
+
+                <p>{r.assunto}</p>
+
+                <p>
+                  {r.feitas}/{metasRevisao.questoesPorRevisao}
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+      )}
 
       <div className="metas-wrapper">
         {metasHoje.map((m, i) => {
