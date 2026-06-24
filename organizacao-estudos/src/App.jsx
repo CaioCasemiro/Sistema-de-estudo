@@ -28,6 +28,7 @@ export default function App() {
   const [dadosMetas, setDadosMetas] = useState({});
   const [simulados, setSimulados] = useState([]);
   const [acertosSimulado, setAcertosSimulado] = useState(0);
+  const [materiaDetalhada, setMateriaDetalhada] = useState(null);
   const bancoMissoes = [
     "10 questões - Interpretação de textos",
     "10 questões - Fonologia e acentuação gráfica",
@@ -172,12 +173,12 @@ export default function App() {
 
       carregarMissoesDoDia();
 
-      
+
 
 
     }
 
-    
+
   }, [diaHoje, revisoes, progresso]);
 
   function adicionarDias(data, dias) {
@@ -596,10 +597,57 @@ export default function App() {
             let a = 0, e = 0, t = 0;
             for (let idx in (desempenho[m] || {})) { a += desempenho[m][idx].acertos; e += desempenho[m][idx].erros; t += desempenho[m][idx].total; }
             const p = t > 0 ? Math.round((a / t) * 100) : 0;
-            return <div className="dashboard-item" key={m}><h4>{m}</h4><p>{p}% ({a}/{t})</p></div>;
+            return <div className="dashboard-item" onClick={()=>setMateriaDetalhada(m)} key={m}><h4>{m}</h4><p>{p}% ({a}/{t})</p></div>;
           })}
         </div>
       </section>
+
+      {materiaDetalhada && (
+        <section className="dashboard-detalhado">
+
+          <h2>{materiaDetalhada}</h2>
+
+          {assuntos[materiaDetalhada]?.map((assunto, idx) => {
+
+            const dados =
+              desempenho[materiaDetalhada]?.[idx];
+
+            const total =
+              dados?.total || 0;
+
+            const acertos =
+              dados?.acertos || 0;
+
+            const percentual =
+              total > 0
+                ? Math.round((acertos / total) * 100)
+                : 0;
+
+            return (
+              <div
+                key={idx}
+                className="detalhe-assunto"
+              >
+                <strong>{assunto}</strong>
+
+                <p>
+                  {percentual}% ({acertos}/{total})
+                </p>
+              </div>
+            );
+          })}
+
+          <button
+            className="btn"
+            onClick={() =>
+              setMateriaDetalhada(null)
+            }
+          >
+            Fechar
+          </button>
+
+        </section>
+      )}
 
       <section className="simulados-historico">
         <h2>Últimos Simulados</h2>

@@ -291,7 +291,7 @@ body {
   color: var(--accent-ouro);
   font-weight: 900;
   letter-spacing: 2px;
-  
+
 }
 
 .dashboard h2,
@@ -544,5 +544,337 @@ body {
 .missao-card .btn {
 
   margin-top: auto;
+
+}
+
+/* ===========================
+   MODAL DETALHAMENTO MATÉRIA
+=========================== */
+
+
+.dashboard-detalhado {
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+
+  width: min(90vw, 850px);
+
+  max-height: 80vh;
+
+
+  padding: 35px;
+
+
+  background:
+    linear-gradient(135deg,
+      var(--bg-secondary),
+      #1a2235);
+
+
+  border: 3px solid var(--accent-ouro);
+
+
+  box-shadow:
+
+    0 0 50px rgba(0, 0, 0, 0.8),
+
+    inset 0 0 25px rgba(212, 175, 55, 0.05);
+
+
+  z-index: 1000;
+
+
+  overflow-y: auto;
+
+
+  animation:
+
+    modalEntrada .25s ease;
+
+}
+
+
+
+/* barra de rolagem */
+
+.dashboard-detalhado::-webkit-scrollbar {
+
+  width: 8px;
+
+}
+
+
+.dashboard-detalhado::-webkit-scrollbar-track {
+
+  background: rgba(0, 0, 0, 0.3);
+
+}
+
+
+.dashboard-detalhado::-webkit-scrollbar-thumb {
+
+  background: var(--accent-ouro);
+
+}
+
+
+
+
+/* título */
+
+
+.dashboard-detalhado h2 {
+
+  color:
+
+    var(--accent-ouro);
+
+
+  text-align:
+
+    center;
+
+
+  font-size:
+
+    2rem;
+
+
+  text-transform:
+
+    uppercase;
+
+
+  letter-spacing:
+
+    3px;
+
+
+  margin-bottom:
+
+    30px;
+
+}
+
+
+
+
+/* GRID DOS ASSUNTOS */
+
+
+.dashboard-detalhado {
+
+  display:
+
+    flex;
+
+  flex-direction:
+
+    column;
+
+}
+
+
+
+
+
+.dashboard-detalhado>div:not(.btn) {
+
+
+  display:
+
+    grid;
+
+
+  grid-template-columns:
+
+    1fr auto;
+
+
+
+  align-items:
+
+    center;
+
+
+}
+
+
+
+
+/* cada assunto */
+
+
+.detalhe-assunto {
+
+
+  background:
+
+    rgba(0, 0, 0, 0.35);
+
+
+  border:
+
+    1px solid var(--border-tac);
+
+
+  border-left:
+
+    4px solid var(--accent-ouro);
+
+
+  padding:
+
+    18px 20px;
+
+
+  margin-bottom:
+
+    12px;
+
+
+  transition:
+
+    .2s;
+
+
+}
+
+
+
+.detalhe-assunto:hover {
+
+
+  border-color:
+
+    var(--accent-ouro);
+
+
+  transform:
+
+    translateX(5px);
+
+
+}
+
+
+
+/* nome */
+
+
+.detalhe-assunto strong {
+
+
+  color:
+
+    var(--text-primary);
+
+
+  font-size:
+
+    1rem;
+
+
+  text-transform:
+
+    uppercase;
+
+
+  letter-spacing:
+
+    1px;
+
+
+}
+
+
+
+
+/* percentual */
+
+
+.detalhe-assunto p {
+
+
+  color:
+
+    var(--accent-ouro);
+
+
+  font-size:
+
+    1.2rem;
+
+
+  font-weight:
+
+    900;
+
+
+  margin:
+
+    0;
+
+
+}
+
+
+
+
+
+/* botão */
+
+
+.dashboard-detalhado .btn {
+
+
+  margin-top:
+
+    25px;
+
+
+  position:
+
+    sticky;
+
+
+  bottom:
+
+    0;
+
+
+}
+
+
+
+
+@keyframes modalEntrada {
+
+
+  from {
+
+    opacity: 0;
+
+    transform:
+
+      translate(-50%, -45%);
+
+  }
+
+
+  to {
+
+    opacity: 1;
+
+    transform:
+
+      translate(-50%, -50%);
+
+  }
 
 }
