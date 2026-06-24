@@ -133,13 +133,13 @@ export const pesosDisciplinas = {
 };
 
 export const cronogramaSemanal = {
-  "Segunda": ["Português", "Conhecimentos Regionais"],
-  "Terça": ["Direito Constitucional", "Conhecimentos Gerais"],
-  "Quarta": ["RLM", "Informática"],
-  "Quinta": ["Direito Administrativo", "Legislação Especial"],
-  "Sexta": ["Direito Penal", "Legislação Institucional"],
-  "Sábado": ["Redação", "Simulado"],
-  "Domingo": ["Português", "RLM"]
+  "Segunda": ["Português", "Direito Penal"],
+  "Terça": ["RLM", "Legislação Institucional"],
+  "Quarta": ["Conhecimentos Gerais", "Direito Constitucional"],
+  "Quinta": ["Direito Administrativo", "Português"],
+  "Sexta": ["Legislação Especial", "Informática"],
+  "Sábado": ["Legislação Institucional", "RLM"],
+  "Domingo": ["Simulado", "Redação"]
 };
 
 export const metasRevisao = { questoesPorRevisao: 15 };
