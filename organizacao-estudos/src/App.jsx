@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ciclo, assuntos, pesosDisciplinas, cronogramaSemanal, metasRevisao, poolMissoesExtras} from "./dados.js";
+import { ciclo, assuntos, pesosDisciplinas, cronogramaSemanal, metasRevisao, poolMissoesExtras } from "./dados.js";
 import { db } from "./firebase";
 import {
   doc,
@@ -558,7 +558,7 @@ export default function App() {
             }
             const porcentagem = total > 0 ? Math.round((acertos / total) * 100) : 0;
             return (
-              <div className="dashboard-item" key={m}>
+              <div className="dashboard-item" key={m} onClick={() => setMateriaDetalhada(m)}>
                 <h4>{m.toUpperCase()}</h4>
                 <p className={`porcentagem ${porcentagem >= 70 ? "bom" : "ruim"}`}>{porcentagem}%</p>
                 <p className="stats">ACERTOS: {acertos} | ERROS: {erros} | TOTAL: {total}</p>
@@ -567,6 +567,53 @@ export default function App() {
           })}
         </div>
       </section>
+      {materiaDetalhada && (
+        <section className="dashboard-detalhado">
+          <div>
+            <h2>{materiaDetalhada}</h2>
+
+            {assuntos[materiaDetalhada]?.map((assunto, idx) => {
+
+              const dados =
+                desempenho[materiaDetalhada]?.[idx];
+
+              const total =
+                dados?.total || 0;
+
+              const acertos =
+                dados?.acertos || 0;
+
+              const percentual =
+                total > 0
+                  ? Math.round((acertos / total) * 100)
+                  : 0;
+
+              return (
+                <div
+                  key={idx}
+                  className="detalhe-assunto"
+                >
+                  <strong>{assunto}</strong>
+
+                  <p>
+                    {percentual}% ({acertos}/{total})
+                  </p>
+                </div>
+              );
+            })}
+
+            <button
+              className="btn"
+              onClick={() =>
+                setMateriaDetalhada(null)
+              }
+            >
+              ✕ FECHAR
+            </button>
+          </div>
+        </section>
+      )}
+
 
       <section className="simulados-historico">
         <h2>▼ HISTÓRICO DE SIMULADOS ▼</h2>
