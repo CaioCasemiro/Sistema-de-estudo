@@ -11,6 +11,33 @@ import {
   getDocs,
   setDoc
 } from "firebase/firestore";
+const etapasRevisao = [
+  {
+    chave: "r24h",
+    nome: "24 HORAS",
+    dias: 1
+  },
+  {
+    chave: "r7d",
+    nome: "7 DIAS",
+    dias: 7
+  },
+  {
+    chave: "r14d",
+    nome: "14 DIAS",
+    dias: 14
+  },
+  {
+    chave: "r21d",
+    nome: "21 DIAS",
+    dias: 21
+  },
+  {
+    chave: "r28d",
+    nome: "28 DIAS",
+    dias: 28
+  }
+];
 
 export default function App() {
   const [acertosBasicos, setAcertosBasicos] = useState(0);
@@ -321,6 +348,22 @@ export default function App() {
 
   }
 
+  async function concluirRevisao(
+    materia,
+    assuntoIndex,
+    chave
+  ) {
+
+    await updateDoc(
+      doc(db, "revisoes", "materias"),
+      {
+        [`${materia}.${assuntoIndex}.${chave}`]:
+          true
+      }
+    );
+
+    window.location.reload();
+  }
 
 
   async function salvarSimulado() {
@@ -411,8 +454,15 @@ export default function App() {
                 <p>{r.assunto}</p>
 
                 <p>
-                  {r.feitas}/{metasRevisao.questoesPorRevisao}
+                  Revisão: {r.tipo}
                 </p>
+
+                <button
+                  className="btn"
+                  onClick={() => concluirRevisao(r)}
+                >
+                  Marcar como feita
+                </button>
 
               </div>
 
@@ -597,7 +647,7 @@ export default function App() {
             let a = 0, e = 0, t = 0;
             for (let idx in (desempenho[m] || {})) { a += desempenho[m][idx].acertos; e += desempenho[m][idx].erros; t += desempenho[m][idx].total; }
             const p = t > 0 ? Math.round((a / t) * 100) : 0;
-            return <div className="dashboard-item" onClick={()=>setMateriaDetalhada(m)} key={m}><h4>{m}</h4><p>{p}% ({a}/{t})</p></div>;
+            return <div className="dashboard-item" onClick={() => setMateriaDetalhada(m)} key={m}><h4>{m}</h4><p>{p}% ({a}/{t})</p></div>;
           })}
         </div>
       </section>
