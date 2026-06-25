@@ -143,3 +143,21 @@ export const cronogramaSemanal = {
 };
 
 export const metasRevisao = { questoesPorRevisao: 15 };
+
+export const poolMissoesExtras = [
+  { tipo: "questoes", descricao: "10 questões extras de Interpretação de textos" },
+  { tipo: "questoes", descricao: "10 questões extras de Lógica argumentativa" },
+  { tipo: "questoes", descricao: "10 questões extras de Crimes contra a vida" },
+  { tipo: "leitura_lei_seca", descricao: "Leitura extra da Lei Maria da Penha" },
+  { tipo: "leitura_pdf", descricao: "Leitura extra de PDF sobre o Art. 5º da CF" },
+  { tipo: "questoes", descricao: "10 questões extras de Direito Administrativo - Princípios" },
+  { tipo: "leitura_lei_seca", descricao: "Leitura extra do Estatuto da PMPI" },
+  { tipo: "questoes", descricao: "10 questões extras de Informática - Windows 10" },
+  { tipo: "leitura_pdf", descricao: "Leitura extra de PDF sobre Conhecimentos Regionais - Economia do Piauí" },
+  { tipo: "questoes", descricao: "10 questões extras de Direito Constitucional - Art. 144" },
+  { tipo: "leitura_lei_seca", descricao: "Leitura extra da Lei de Abuso de Autoridade" },
+  { tipo: "questoes", descricao: "10 questões extras de RLM - Porcentagem" },
+  { tipo: "leitura_pdf", descricao: "Leitura extra de PDF sobre Globalização" },
+  { tipo: "questoes", descricao: "10 questões extras de Direito Penal - Aplicação da Lei Penal" },
+  { tipo: "leitura_lei_seca", descricao: "Leitura extra do Código de Ética PMPI" },
+];
