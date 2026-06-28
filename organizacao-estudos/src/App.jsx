@@ -300,6 +300,23 @@ export default function App() {
   }
 
 
+  function verificarMedia() {
+    const percentualBasicos = (acertosBasicos / 20) * 100;
+    const percentualEspecificos = (acertosEspecificos / 20) * 100;
+    const notaFinal = (acertosBasicos * 1) + (acertosEspecificos * 2);
+    const percentualGeral = Math.round((notaFinal / 60) * 100);
+
+    return {
+      percentualBasicos: Math.round(percentualBasicos),
+      percentualEspecificos: Math.round(percentualEspecificos),
+      percentualGeral,
+      atingiuBasicos: percentualBasicos >= 50,
+      atingiuEspecificos: percentualEspecificos >= 50,
+      atingiuGeral: percentualGeral >= 60,
+      aprovado: percentualBasicos >= 50 && percentualEspecificos >= 50 && percentualGeral >= 60
+    };
+  }
+
   async function salvarSimulado() {
 
     if (
@@ -320,6 +337,8 @@ export default function App() {
       (notaFinal / 60) * 100
     );
 
+    const media = verificarMedia();
+
     await addDoc(collection(db, "simulados"), {
       basicos: acertosBasicos,
       especificos: acertosEspecificos,
@@ -328,7 +347,16 @@ export default function App() {
       data: new Date().toISOString()
     });
 
-    alert("Simulado salvo!");
+    let mensagem = `Simulado salvo!\n\n`;
+    mensagem += `📊 RESULTADO:\n`;
+    mensagem += `Básicas: ${media.percentualBasicos}% ${media.atingiuBasicos ? "✓" : "✗"}\n`;
+    mensagem += `Específicas: ${media.percentualEspecificos}% ${media.atingiuEspecificos ? "✓" : "✗"}\n`;
+    mensagem += `Geral: ${media.percentualGeral}% ${media.atingiuGeral ? "✓" : "✗"}\n\n`;
+    mensagem += media.aprovado 
+      ? "🎉 PARABÉNS! Você atingiu as médias exigidas!" 
+      : "⚠️ Você não atingiu as médias. Necesário melhorar!";
+
+    alert(mensagem);
     window.location.reload();
   }
 
@@ -444,6 +472,32 @@ export default function App() {
                 </div>
               </div>
               <p className="nota-previa">NOTA PRÉVIA: {(acertosBasicos * 1) + (acertosEspecificos * 2)} / 60</p>
+              
+              <div className="media-preview">
+                <h4>VERIFICAÇÃO DE MÉDIA</h4>
+                <div className="media-item">
+                  <span>BÁSICAS: {Math.round((acertosBasicos / 20) * 100)}%</span>
+                  <span className={`status ${verificarMedia().atingiuBasicos ? "ok" : "nao-ok"}`}>
+                    {verificarMedia().atingiuBasicos ? "✓ PASSOU" : "✗ ABAIXO"}
+                  </span>
+                </div>
+                <div className="media-item">
+                  <span>ESPECÍFICAS: {Math.round((acertosEspecificos / 20) * 100)}%</span>
+                  <span className={`status ${verificarMedia().atingiuEspecificos ? "ok" : "nao-ok"}`}>
+                    {verificarMedia().atingiuEspecificos ? "✓ PASSOU" : "✗ ABAIXO"}
+                  </span>
+                </div>
+                <div className="media-item">
+                  <span>GERAL: {Math.round(((acertosBasicos * 1 + acertosEspecificos * 2) / 60) * 100)}%</span>
+                  <span className={`status ${verificarMedia().atingiuGeral ? "ok" : "nao-ok"}`}>
+                    {verificarMedia().atingiuGeral ? "✓ PASSOU" : "✗ ABAIXO"}
+                  </span>
+                </div>
+                <div className={`resultado-final ${verificarMedia().aprovado ? "aprovado" : "reprovado"}`}>
+                  {verificarMedia().aprovado ? "🎉 DENTRO DAS MÉDIAS!" : "⚠️ ABAIXO DA MÉDIA"}
+                </div>
+              </div>
+
               <button className="btn" onClick={salvarSimulado}>
                 REGISTRAR SIMULADO ▶
               </button>

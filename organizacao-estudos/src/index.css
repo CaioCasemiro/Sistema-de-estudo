@@ -313,6 +313,82 @@ body {
   text-transform: uppercase;
 }
 
+/* MEDIA PREVIEW */
+.media-preview {
+  background: rgba(0, 61, 122, 0.15);
+  border: 1px solid var(--accent-azul-pm);
+  padding: 20px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.media-preview h4 {
+  color: var(--accent-ouro);
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.media-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 3px solid var(--accent-azul-pm);
+  margin-bottom: 10px;
+  border-radius: 2px;
+}
+
+.media-item span:first-child {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.status {
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.status.ok {
+  background: var(--accent-verde-tac);
+  color: #fff;
+}
+
+.status.nao-ok {
+  background: var(--accent-vermelho-alerta);
+  color: #fff;
+}
+
+.resultado-final {
+  text-align: center;
+  padding: 15px;
+  margin-top: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.resultado-final.aprovado {
+  background: rgba(45, 90, 45, 0.3);
+  color: var(--accent-verde-tac);
+  border: 1px solid var(--accent-verde-tac);
+}
+
+.resultado-final.reprovado {
+  background: rgba(196, 30, 58, 0.2);
+  color: var(--accent-vermelho-alerta);
+  border: 1px solid var(--accent-vermelho-alerta);
+}
+
 /* MISSÕES EXTRAS */
 .missoes-extras {
   margin-top: 80px;
