@@ -757,6 +757,14 @@ p.porcentagem.ruim {
   box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
+.simulado-item.aprovado {
+  border-left: 4px solid var(--accent-verde-tac);
+}
+
+.simulado-item.reprovado {
+  border-left: 4px solid var(--accent-vermelho-alerta);
+}
+
 .sim-data {
   font-size: 0.8rem;
   color: var(--text-secondary);
@@ -789,6 +797,57 @@ p.porcentagem.ruim {
   color: var(--text-secondary);
   margin-top: 10px;
   text-transform: uppercase;
+}
+
+/* VERIFICAÇÃO DE MÉDIA NO HISTÓRICO */
+.media-simulado {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-tac);
+}
+
+.check-media {
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  margin: 5px 0;
+  border-radius: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.check-media.ok {
+  background: rgba(45, 90, 45, 0.3);
+  color: var(--accent-verde-tac);
+  border: 1px solid var(--accent-verde-tac);
+}
+
+.check-media.nao-ok {
+  background: rgba(196, 30, 58, 0.2);
+  color: var(--accent-vermelho-alerta);
+  border: 1px solid var(--accent-vermelho-alerta);
+}
+
+.resultado-simulado {
+  font-size: 0.8rem;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resultado-simulado.aprovado {
+  background: rgba(45, 90, 45, 0.4);
+  color: var(--accent-verde-tac);
+  border: 1px solid var(--accent-verde-tac);
+}
+
+.resultado-simulado.reprovado {
+  background: rgba(196, 30, 58, 0.3);
+  color: var(--accent-vermelho-alerta);
+  border: 1px solid var(--accent-vermelho-alerta);
 }
 
 .sem-dados {

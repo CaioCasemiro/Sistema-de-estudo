@@ -388,6 +388,23 @@ export default function App() {
 
   }
 
+  function verificarMediaSimulado(basicos, especificos) {
+    const percentualBasicos = (basicos / 20) * 100;
+    const percentualEspecificos = (especificos / 20) * 100;
+    const notaFinal = (basicos * 1) + (especificos * 2);
+    const percentualGeral = Math.round((notaFinal / 60) * 100);
+
+    return {
+      percentualBasicos: Math.round(percentualBasicos),
+      percentualEspecificos: Math.round(percentualEspecificos),
+      percentualGeral,
+      atingiuBasicos: percentualBasicos >= 50,
+      atingiuEspecificos: percentualEspecificos >= 50,
+      atingiuGeral: percentualGeral >= 60,
+      aprovado: percentualBasicos >= 50 && percentualEspecificos >= 50 && percentualGeral >= 60
+    };
+  }
+
   return (
     <div className="container">
       <header className="header">
@@ -673,14 +690,32 @@ export default function App() {
         <h2>▼ HISTÓRICO DE SIMULADOS ▼</h2>
         <div className="simulados-list">
           {simulados.length > 0 ? (
-            simulados.map(s => (
-              <div className="simulado-item" key={s.id}>
-                <p className="sim-data">{new Date(s.data).toLocaleDateString("pt-BR")}</p>
-                <p className="sim-nota">NOTA: {s.notaFinal} / 60</p>
-                <p className={`sim-percent ${s.porcentagem >= 70 ? "bom" : "ruim"}`}>({s.porcentagem}%)</p>
-                <p className="sim-info">BÁSICAS: {s.basicos} | ESPECÍFICAS: {s.especificos}</p>
-              </div>
-            ))
+            simulados.map(s => {
+              const media = verificarMediaSimulado(s.basicos, s.especificos);
+              return (
+                <div className={`simulado-item ${media.aprovado ? "aprovado" : "reprovado"}`} key={s.id}>
+                  <p className="sim-data">{new Date(s.data).toLocaleDateString("pt-BR")}</p>
+                  <p className="sim-nota">NOTA: {s.notaFinal} / 60</p>
+                  <p className={`sim-percent ${s.porcentagem >= 70 ? "bom" : "ruim"}`}>({s.porcentagem}%)</p>
+                  <p className="sim-info">BÁSICAS: {s.basicos} | ESPECÍFICAS: {s.especificos}</p>
+                  
+                  <div className="media-simulado">
+                    <div className={`check-media ${media.atingiuBasicos ? "ok" : "nao-ok"}`}>
+                      Básicas: {media.percentualBasicos}% {media.atingiuBasicos ? "✓" : "✗"}
+                    </div>
+                    <div className={`check-media ${media.atingiuEspecificos ? "ok" : "nao-ok"}`}>
+                      Específicas: {media.percentualEspecificos}% {media.atingiuEspecificos ? "✓" : "✗"}
+                    </div>
+                    <div className={`check-media ${media.atingiuGeral ? "ok" : "nao-ok"}`}>
+                      Geral: {media.percentualGeral}% {media.atingiuGeral ? "✓" : "✗"}
+                    </div>
+                    <div className={`resultado-simulado ${media.aprovado ? "aprovado" : "reprovado"}`}>
+                      {media.aprovado ? "✓ DENTRO DAS MÉDIAS" : "✗ ABAIXO DA MÉDIA"}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
           ) : (
             <p className="sem-dados">NENHUM SIMULADO REGISTRADO.</p>
           )}
