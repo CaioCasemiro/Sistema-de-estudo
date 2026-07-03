@@ -413,45 +413,7 @@ export default function App() {
         <p>{new Date().toLocaleDateString("pt-BR")}</p>
       </header>
 
-      {revisoesHoje.length > 0 && (
-
-        <section className="revisoes-pendentes">
-
-          <h2>▼ REVISÕES PENDENTES ▼</h2>
-
-          <div className="revisoes-grid">
-
-            {revisoesHoje.map((r, i) => (
-
-              <div
-                className="revisao-item"
-                key={i}
-              >
-
-                <h4>{r.materia}</h4>
-
-                <p>{r.assunto}</p>
-
-                <p>
-                  PRAZO: {r.tipo}
-                </p>
-
-                <button
-                  className="btn-revisao"
-                  onClick={() => concluirRevisao(r)}
-                >
-                  MARCAR COMO FEITA
-                </button>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </section>
-
-      )}
+      
 
       <div className="metas-wrapper">
         {metasHoje.map((m, i) => {
