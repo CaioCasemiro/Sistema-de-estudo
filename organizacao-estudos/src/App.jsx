@@ -1,10 +1,18 @@
 import { useState, useEffect } from "react";
-import { ciclo, assuntos, pesosDisciplinas, cronogramaSemanal, metasRevisao, poolMissoesExtras } from "./dados.js";
+import { ciclo, assuntos, poolMissoesExtras } from "./dados.js";
 import { db } from "./firebase";
+
+const imagensDaPublicFolder = import.meta.glob("/public/*.{png,jpg,jpeg,webp,svg}", {
+  eager: true,
+  import: "default"
+});
+
+const caminhosImagensMetas = Object.keys(imagensDaPublicFolder)
+  .map((caminho) => caminho.replace("/public", ""))
+  .filter((caminho) => !["/favicon.svg", "/icons.svg"].includes(caminho));
 import {
   doc,
   getDoc,
-  updateDoc,
   collection,
   addDoc,
   query,
@@ -12,46 +20,31 @@ import {
   setDoc
 } from "firebase/firestore";
 
-const etapasRevisao = [
-  { chave: "24h", nome: "24 HORAS", dias: 1 },
-  { chave: "7d", nome: "7 DIAS", dias: 7 },
-  { chave: "14d", nome: "14 DIAS", dias: 14 },
-  { chave: "21d", nome: "21 DIAS", dias: 21 },
-  { chave: "28d", nome: "28 DIAS", dias: 28 }
-];
-
 export default function App() {
   const [acertosBasicos, setAcertosBasicos] = useState(0);
   const [acertosEspecificos, setAcertosEspecificos] = useState(0);
-  const [revisoesHoje, setRevisoesHoje] = useState([]);
   const [redacoesFeitas, setRedacoesFeitas] = useState(0);
   const [fezRedacao, setFezRedacao] = useState(false);
   const [missoesExtras, setMissoesExtras] = useState([]);
   const [statusMissoes, setStatusMissoes] = useState({});
-  const [progresso, setProgresso] = useState({});
   const [desempenho, setDesempenho] = useState({});
-  const [revisoes, setRevisoes] = useState({});
-  const [metasHoje, setMetasHoje] = useState([]);
-  const [dadosMetas, setDadosMetas] = useState({});
   const [simulados, setSimulados] = useState([]);
   const [materiaDetalhada, setMateriaDetalhada] = useState(null);
+  const [registroConteudos, setRegistroConteudos] = useState({});
+  const [fotoMetas, setFotoMetas] = useState(caminhosImagensMetas[0] || "");
 
   const diaHoje = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][new Date().getDay()];
 
   useEffect(() => {
     async function carregar() {
       try {
-        const p = await getDoc(doc(db, "progresso", "materias"));
-        if (p.exists()) setProgresso(p.data());
         const d = await getDoc(doc(db, "desempenho", "materias"));
         if (d.exists()) setDesempenho(d.data());
-        const r = await getDoc(doc(db, "revisoes", "materias"));
-        if (r.exists()) setRevisoes(r.data());
 
         const q = query(collection(db, "simulados"));
         const querySnapshot = await getDocs(q);
         const sims = [];
-        querySnapshot.forEach(doc => sims.push({ id: doc.id, ...doc.data() }));
+        querySnapshot.forEach((documento) => sims.push({ id: documento.id, ...documento.data() }));
         setSimulados(sims.sort((a, b) => new Date(b.data) - new Date(a.data)));
 
         const redacoesDoc = await getDoc(doc(db, "redacoes", "contador"));
@@ -63,242 +56,102 @@ export default function App() {
         if (missaoDoc.exists()) {
           setMissoesExtras(missaoDoc.data().missoes);
         }
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
     }
     carregar();
   }, []);
 
+
   useEffect(() => {
-    const materias = cronogramaSemanal[diaHoje] || [];
-    const metas = [];
-    const revisoesPendentes = [];
-    const hoje = new Date().toISOString().split("T")[0];
-
-    for (const materia in revisoes) {
-      for (const assuntoIndex in revisoes[materia]) {
-        const rev = revisoes[materia][assuntoIndex];
-        etapasRevisao.forEach(etapa => {
-          const dataRevisao = rev[`revisao${etapa.chave}`];
-          const concluido = rev[`concluido${etapa.chave}`];
-
-          if (dataRevisao && !concluido && new Date(dataRevisao).toISOString().split("T")[0] <= hoje) {
-            revisoesPendentes.push({
-              materia,
-              assuntoIndex: parseInt(assuntoIndex),
-              assunto: assuntos[materia][assuntoIndex],
-              tipo: etapa.nome,
-              chaveRevisao: `concluido${etapa.chave}`
-            });
-          }
-        });
-      }
-    }
-    materias.forEach(m => metas.push({ tipo: "nova", materia: m }));
-    setRevisoesHoje(revisoesPendentes);
-    setMetasHoje(metas);
-    const inicial = {};
-    metas.forEach((m, i) => (inicial[i] = { estudado: false, acertos: 0, erros: 0 }));
-    setDadosMetas(inicial);
     if (missoesExtras.length === 0) {
-
       async function carregarMissoesDoDia() {
-
-        const hoje = new Date()
-          .toISOString()
-          .split("T")[0];
-
-        const missaoDoc = await getDoc(
-          doc(
-            db,
-            "missoesDiarias",
-            hoje
-          )
-        );
+        const hoje = new Date().toISOString().split("T")[0];
+        const missaoDoc = await getDoc(doc(db, "missoesDiarias", hoje));
 
         if (missaoDoc.exists()) {
-          setMissoesExtras(
-            missaoDoc.data().missoes
-          );
+          setMissoesExtras(missaoDoc.data().missoes);
           return;
         }
 
         const missoes = [];
 
         while (missoes.length < 2) {
-
-          const aleatoria =
-            poolMissoesExtras[
-            Math.floor(
-              Math.random() *
-              poolMissoesExtras.length
-            )
-            ];
+          const aleatoria = poolMissoesExtras[Math.floor(Math.random() * poolMissoesExtras.length)];
 
           if (!missoes.includes(aleatoria)) {
             missoes.push(aleatoria);
           }
         }
 
-        await setDoc(
-          doc(db, "missoesDiarias", hoje),
-          {
-            data: hoje,
-            missoes
-          }
-        );
+        await setDoc(doc(db, "missoesDiarias", hoje), {
+          data: hoje,
+          missoes
+        });
 
         setMissoesExtras(missoes);
       }
 
       carregarMissoesDoDia();
-
-
-
-
     }
+  }, [missoesExtras]);
 
-
-  }, [diaHoje, revisoes, progresso, missoesExtras]);
-
-  function adicionarDias(data, dias) {
-
-    const nova = new Date(data);
-
-    nova.setDate(
-      nova.getDate() + dias
-    );
-
-    return nova.toISOString();
-
+  function handleConteudoChange(materia, index, campo, valor) {
+    const chave = `${materia}-${index}`;
+    setRegistroConteudos((prev) => ({
+      ...prev,
+      [chave]: {
+        ...(prev[chave] || {}),
+        [campo]: Number.parseInt(valor, 10) || 0
+      }
+    }));
   }
 
-  async function salvar(i, dados) {
+  async function salvarConteudo(materia, index, dados) {
+    const acertos = Number(dados?.acertos || 0);
+    const erros = Number(dados?.erros || 0);
 
-    const meta = metasHoje[i];
-
-    const idx =
-      meta.tipo === "revisao"
-        ? meta.assuntoIndex
-        : (progresso[meta.materia] || 0);
-
-    if (meta.tipo === "nova") {
-
-      await setDoc(
-        doc(db, "progresso", "materias"),
-        {
-          [meta.materia]: idx + 1
-        },
-        { merge: true }
-      );
-
+    if (acertos < 0 || erros < 0) {
+      alert("Valores inválidos. Use números maiores ou iguais a zero.");
+      return;
     }
 
-    if (
-      pesosDisciplinas[meta.materia]
-        .tipoEstudo === "questoes"
-    ) {
+    const atual = desempenho[materia]?.[index] || { acertos: 0, erros: 0, total: 0 };
+    const atualizado = {
+      acertos: atual.acertos + acertos,
+      erros: atual.erros + erros,
+      total: atual.total + acertos + erros
+    };
 
-      const des =
-        desempenho[meta.materia]?.[idx]
-        || {
-          acertos: 0,
-          erros: 0,
-          total: 0
-        };
+    const novoDesempenho = {
+      ...desempenho,
+      [materia]: {
+        ...(desempenho[materia] || {}),
+        [index]: atualizado
+      }
+    };
 
-      await setDoc(
-        doc(db, "desempenho", "materias"),
-        {
-
-          [meta.materia]: {
-
-            ...(desempenho[meta.materia] || {}),
-
-            [idx]: {
-
-              acertos:
-                des.acertos +
-                dados.acertos,
-
-              erros:
-                des.erros +
-                dados.erros,
-
-              total:
-                des.total +
-                dados.acertos +
-                dados.erros
-
-            }
-
-          }
-
-        },
-        { merge: true }
-      );
-
-    }
-
-    const agora = new Date();
-
-    const revAtu =
-      revisoes[meta.materia]?.[idx]
-      || {};
-
-    const novasQ =
-      meta.tipo === "nova"
-        ? 0
-        : (revAtu.questoesRevisao || 0)
-        + (dados.acertos + dados.erros);
+    setDesempenho(novoDesempenho);
 
     await setDoc(
-      doc(db, "revisoes", "materias"),
+      doc(db, "desempenho", "materias"),
       {
-
-        [meta.materia]: {
-
-          ...(revisoes[meta.materia] || {}),
-
-          [idx]: {
-
-            questoesRevisao: novasQ,
-
-            revisao24h: revAtu.revisao24h || adicionarDias(agora, 1),
-            revisao7d: revAtu.revisao7d || adicionarDias(agora, 7),
-            revisao14d: revAtu.revisao14d || adicionarDias(agora, 14),
-            revisao21d: revAtu.revisao21d || adicionarDias(agora, 21),
-            revisao28d: revAtu.revisao28d || adicionarDias(agora, 28),
-            concluido24h: revAtu.concluido24h || false,
-            concluido7d: revAtu.concluido7d || false,
-            concluido14d: revAtu.concluido14d || false,
-            concluido21d: revAtu.concluido21d || false,
-            concluido28d: revAtu.concluido28d || false,
-            last: agora.toISOString()
-
-          }
-
+        [materia]: {
+          ...(novoDesempenho[materia] || {}),
+          [index]: atualizado
         }
-
       },
       { merge: true }
     );
 
+    setRegistroConteudos((prev) => ({
+      ...prev,
+      [`${materia}-${index}`]: { acertos: 0, erros: 0 }
+    }));
+
     alert("Salvo!");
-
-    window.location.reload();
-
   }
-
-  async function concluirRevisao(revisao) {
-    await updateDoc(
-      doc(db, "revisoes", "materias"),
-      {
-        [`${revisao.materia}.${revisao.assuntoIndex}.${revisao.chaveRevisao}`]: true
-      }
-    );
-    window.location.reload();
-  }
-
 
   function verificarMedia() {
     const percentualBasicos = (acertosBasicos / 20) * 100;
@@ -408,144 +261,161 @@ export default function App() {
   return (
     <div className="container">
       <header className="header">
-
         <h1>PÓS-EDITAL: {diaHoje.toUpperCase()}</h1>
         <p>{new Date().toLocaleDateString("pt-BR")}</p>
       </header>
 
-      
+      <section className="mural-metas">
+        <h2>▼ MURAL DE METAS ▼</h2>
+        <div className="mural-content">
+
+          {fotoMetas ? (
+            <img className="mural-foto" src={fotoMetas} alt="Programa de metas" />
+          ) : (
+            <div className="mural-placeholder">
+              Ainda não há imagem disponível. Adicione um arquivo na pasta public/ do projeto para exibi-la aqui.
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="registro-conteudos">
+        <h2>▼ LISTA DE MATÉRIAS E CONTEÚDOS ▼</h2>
+        <div className="conteudos-list">
+          {ciclo
+            .filter((materia) => materia !== "Redação" && materia !== "Simulado")
+            .map((materia) => (
+              <div className="materia-bloco" key={materia}>
+                <div className="materia-header">
+                  <h3>{materia.toUpperCase()}</h3>
+                  <span>{assuntos[materia]?.length || 0} CONTEÚDOS</span>
+                </div>
+
+                <div className="conteudos-rows">
+                  {assuntos[materia]?.map((assunto, index) => {
+                    const chave = `${materia}-${index}`;
+                    const dadosAtuais = desempenho[materia]?.[index];
+                    const total = dadosAtuais?.total || 0;
+                    const acertos = dadosAtuais?.acertos || 0;
+                    const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
+                    const valores = registroConteudos[chave] || { acertos: 0, erros: 0 };
+
+                    return (
+                      <div className="conteudo-row" key={chave}>
+                        <div className="conteudo-info">
+                          <strong>{assunto}</strong>
+                          <span>{percentual}% ({acertos}/{total})</span>
+                        </div>
+
+                        <div className="conteudo-inputs">
+                          <label className="input-field">
+                            <span>ACERTOS</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={valores.acertos}
+                              onChange={(e) => handleConteudoChange(materia, index, "acertos", e.target.value)}
+                            />
+                          </label>
+                          <label className="input-field">
+                            <span>ERROS</span>
+                            <input
+                              type="number"
+                              min="0"
+                              value={valores.erros}
+                              onChange={(e) => handleConteudoChange(materia, index, "erros", e.target.value)}
+                            />
+                          </label>
+                        </div>
+
+                        <button className="btn-conteudo" onClick={() => salvarConteudo(materia, index, valores)}>
+                          SALVAR
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+        </div>
+      </section>
 
       <div className="metas-wrapper">
-        {metasHoje.map((m, i) => {
-          const idx = m.tipo === "revisao" ? m.assuntoIndex : (progresso[m.materia] || 0);
-          if (m.materia === "Simulado") return (
-            <div className="card simulado" key={i}>
-              <span className="badge">SIMULADO</span>
+        <div className="card simulado">
+          <span className="badge">SIMULADO</span>
 
-              <h3 className="materia">SIMULADO GERAL</h3>
+          <h3 className="materia">SIMULADO GERAL</h3>
 
-              <div className="simulado-inputs">
-                <div className="input-group">
-                  <label>ACERTOS BÁSICAS (0-20)</label>
-                  <input
-                    type="number"
-                    value={acertosBasicos}
-                    onChange={(e) =>
-                      setAcertosBasicos(parseInt(e.target.value) || 0)
-                    }
-                    min="0"
-                    max="20"
-                  />
-                </div>
-                <div className="input-group">
-                  <label>ACERTOS ESPECÍFICAS (0-20)</label>
-                  <input
-                    type="number"
-                    value={acertosEspecificos}
-                    onChange={(e) =>
-                      setAcertosEspecificos(parseInt(e.target.value) || 0)
-                    }
-                    min="0"
-                    max="20"
-                  />
-                </div>
-              </div>
-              <p className="nota-previa">NOTA PRÉVIA: {(acertosBasicos * 1) + (acertosEspecificos * 2)} / 60</p>
-              
-              <div className="media-preview">
-                <h4>VERIFICAÇÃO DE MÉDIA</h4>
-                <div className="media-item">
-                  <span>BÁSICAS: {Math.round((acertosBasicos / 20) * 100)}%</span>
-                  <span className={`status ${verificarMedia().atingiuBasicos ? "ok" : "nao-ok"}`}>
-                    {verificarMedia().atingiuBasicos ? "✓ PASSOU" : "✗ ABAIXO"}
-                  </span>
-                </div>
-                <div className="media-item">
-                  <span>ESPECÍFICAS: {Math.round((acertosEspecificos / 20) * 100)}%</span>
-                  <span className={`status ${verificarMedia().atingiuEspecificos ? "ok" : "nao-ok"}`}>
-                    {verificarMedia().atingiuEspecificos ? "✓ PASSOU" : "✗ ABAIXO"}
-                  </span>
-                </div>
-                <div className="media-item">
-                  <span>GERAL: {Math.round(((acertosBasicos * 1 + acertosEspecificos * 2) / 60) * 100)}%</span>
-                  <span className={`status ${verificarMedia().atingiuGeral ? "ok" : "nao-ok"}`}>
-                    {verificarMedia().atingiuGeral ? "✓ PASSOU" : "✗ ABAIXO"}
-                  </span>
-                </div>
-                <div className={`resultado-final ${verificarMedia().aprovado ? "aprovado" : "reprovado"}`}>
-                  {verificarMedia().aprovado ? "🎉 DENTRO DAS MÉDIAS!" : "⚠️ ABAIXO DA MÉDIA"}
-                </div>
-              </div>
-
-              <button className="btn" onClick={salvarSimulado}>
-                REGISTRAR SIMULADO ▶
-              </button>
+          <div className="simulado-inputs">
+            <div className="input-group">
+              <label>ACERTOS BÁSICAS (0-20)</label>
+              <input
+                type="number"
+                value={acertosBasicos}
+                onChange={(e) => setAcertosBasicos(parseInt(e.target.value) || 0)}
+                min="0"
+                max="20"
+              />
             </div>
-          );
-          if (m.materia === "Redação") {
-            return (
-              <div className="card redacao" key={i}>
-                <span className="badge">REDAÇÃO</span>
-                <h3 className="materia">REDAÇÃO</h3>
-                <div className="checkbox">
-                  <input
-                    type="checkbox"
-                    id={`redacao-fez-${i}`}
-                    checked={fezRedacao}
-                    onChange={() => setFezRedacao(!fezRedacao)}
-                  />
-                  <label htmlFor={`redacao-fez-${i}`}>CONCLUÍ A REDAÇÃO</label>
-                </div>
-                <button className="btn" onClick={salvarRedacao} disabled={!fezRedacao}>
-                  REGISTRAR REDAÇÃO ▶
-                </button>
-              </div>
-            );
-          }
-          return (
-            <div className="card nova" key={i}>
-              <span className="badge">NOVA MISSÃO</span>
-              <h3 className="materia">{m.materia.toUpperCase()}</h3>
-              <p className="assunto">{assuntos[m.materia]?.[idx]}</p>
-              {pesosDisciplinas[m.materia].tipoEstudo === "questoes" ? (
-                <div className="inputs">
-                  <input
-                    type="number"
-                    placeholder="ACERTOS"
-                    value={dadosMetas[i]?.acertos || ""}
-                    onChange={(e) =>
-                      setDadosMetas({ ...dadosMetas, [i]: { ...dadosMetas[i], acertos: parseInt(e.target.value) || 0 } })}
-                  />
-                  <input
-                    type="number"
-                    placeholder="ERROS"
-                    value={dadosMetas[i]?.erros || ""}
-                    onChange={(e) =>
-                      setDadosMetas({ ...dadosMetas, [i]: { ...dadosMetas[i], erros: parseInt(e.target.value) || 0 } })}
-                  />
-                </div>
-              ) : (
-                <div className="checkbox">
-                  <input
-                    type="checkbox"
-                    id={`estudado-${i}`}
-                    checked={dadosMetas[i]?.estudado || false}
-                    onChange={(e) =>
-                      setDadosMetas({ ...dadosMetas, [i]: { ...dadosMetas[i], estudado: e.target.checked } })}
-                  />
-                  <label htmlFor={`estudado-${i}`}>CONCLUÍ A LEITURA</label>
-                </div>
-              )}
-              <button
-                className="btn"
-                onClick={() => salvar(i, dadosMetas[i])}
-                disabled={!dadosMetas[i]?.estudado && pesosDisciplinas[m.materia].tipoEstudo === "leitura"}
-              >
-                CONCLUIR MISSÃO ▶
-              </button>
+            <div className="input-group">
+              <label>ACERTOS ESPECÍFICAS (0-20)</label>
+              <input
+                type="number"
+                value={acertosEspecificos}
+                onChange={(e) => setAcertosEspecificos(parseInt(e.target.value) || 0)}
+                min="0"
+                max="20"
+              />
             </div>
-          );
-        })}
+          </div>
+          <p className="nota-previa">NOTA PRÉVIA: {(acertosBasicos * 1) + (acertosEspecificos * 2)} / 60</p>
+
+          <div className="media-preview">
+            <h4>VERIFICAÇÃO DE MÉDIA</h4>
+            <div className="media-item">
+              <span>BÁSICAS: {Math.round((acertosBasicos / 20) * 100)}%</span>
+              <span className={`status ${verificarMedia().atingiuBasicos ? "ok" : "nao-ok"}`}>
+                {verificarMedia().atingiuBasicos ? "✓ PASSOU" : "✗ ABAIXO"}
+              </span>
+            </div>
+            <div className="media-item">
+              <span>ESPECÍFICAS: {Math.round((acertosEspecificos / 20) * 100)}%</span>
+              <span className={`status ${verificarMedia().atingiuEspecificos ? "ok" : "nao-ok"}`}>
+                {verificarMedia().atingiuEspecificos ? "✓ PASSOU" : "✗ ABAIXO"}
+              </span>
+            </div>
+            <div className="media-item">
+              <span>GERAL: {Math.round(((acertosBasicos * 1 + acertosEspecificos * 2) / 60) * 100)}%</span>
+              <span className={`status ${verificarMedia().atingiuGeral ? "ok" : "nao-ok"}`}>
+                {verificarMedia().atingiuGeral ? "✓ PASSOU" : "✗ ABAIXO"}
+              </span>
+            </div>
+            <div className={`resultado-final ${verificarMedia().aprovado ? "aprovado" : "reprovado"}`}>
+              {verificarMedia().aprovado ? "🎉 DENTRO DAS MÉDIAS!" : "⚠️ ABAIXO DA MÉDIA"}
+            </div>
+          </div>
+
+          <button className="btn" onClick={salvarSimulado}>
+            REGISTRAR SIMULADO ▶
+          </button>
+        </div>
+
+        <div className="card redacao">
+          <span className="badge">REDAÇÃO</span>
+          <h3 className="materia">REDAÇÃO</h3>
+          <div className="checkbox">
+            <input
+              type="checkbox"
+              id="redacao-fez"
+              checked={fezRedacao}
+              onChange={() => setFezRedacao(!fezRedacao)}
+            />
+            <label htmlFor="redacao-fez">CONCLUÍ A REDAÇÃO</label>
+          </div>
+          <button className="btn" onClick={salvarRedacao} disabled={!fezRedacao}>
+            REGISTRAR REDAÇÃO ▶
+          </button>
+        </div>
       </div>
 
       {Array.isArray(missoesExtras) && missoesExtras.length > 0 && (
