@@ -10,6 +10,20 @@ const imagensDaPublicFolder = import.meta.glob("/public/*.{png,jpg,jpeg,webp,svg
 const caminhosImagensMetas = Object.keys(imagensDaPublicFolder)
   .map((caminho) => caminho.replace("/public", ""))
   .filter((caminho) => !["/favicon.svg", "/icons.svg"].includes(caminho));
+
+const coresMaterias = {
+  Português: { cor: "#4fd1c5", rgb: "79, 209, 197" },
+  RLM: { cor: "#f59e0b", rgb: "245, 158, 11" },
+  "Conhecimentos Regionais": { cor: "#38bdf8", rgb: "56, 189, 248" },
+  "Conhecimentos Gerais": { cor: "#c084fc", rgb: "192, 132, 252" },
+  Informática: { cor: "#34d399", rgb: "52, 211, 153" },
+  "Direito Constitucional": { cor: "#f472b6", rgb: "244, 114, 182" },
+  "Direito Administrativo": { cor: "#fb923c", rgb: "251, 146, 60" },
+  "Direito Penal": { cor: "#f43f5e", rgb: "244, 63, 94" },
+  "Legislação Especial": { cor: "#60a5fa", rgb: "96, 165, 250" },
+  "Legislação Institucional": { cor: "#a3e635", rgb: "163, 230, 53" }
+};
+
 import {
   doc,
   getDoc,
@@ -284,59 +298,70 @@ export default function App() {
         <div className="conteudos-list">
           {ciclo
             .filter((materia) => materia !== "Redação" && materia !== "Simulado")
-            .map((materia) => (
-              <div className="materia-bloco" key={materia}>
-                <div className="materia-header">
-                  <h3>{materia.toUpperCase()}</h3>
-                  <span>{assuntos[materia]?.length || 0} CONTEÚDOS</span>
-                </div>
+            .map((materia) => {
+              const corMateria = coresMaterias[materia] || { cor: "var(--accent-ouro)", rgb: "212, 175, 55" };
 
-                <div className="conteudos-rows">
-                  {assuntos[materia]?.map((assunto, index) => {
-                    const chave = `${materia}-${index}`;
-                    const dadosAtuais = desempenho[materia]?.[index];
-                    const total = dadosAtuais?.total || 0;
-                    const acertos = dadosAtuais?.acertos || 0;
-                    const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
-                    const valores = registroConteudos[chave] || { acertos: 0, erros: 0 };
+              return (
+                <div
+                  className="materia-bloco"
+                  key={materia}
+                  style={{
+                    "--materia-accent": corMateria.cor,
+                    "--materia-accent-rgb": corMateria.rgb
+                  }}
+                >
+                  <div className="materia-header">
+                    <h3>{materia.toUpperCase()}</h3>
+                    <span>{assuntos[materia]?.length || 0} CONTEÚDOS</span>
+                  </div>
 
-                    return (
-                      <div className="conteudo-row" key={chave}>
-                        <div className="conteudo-info">
-                          <strong>{assunto}</strong>
-                          <span>{percentual}% ({acertos}/{total})</span>
+                  <div className="conteudos-rows">
+                    {assuntos[materia]?.map((assunto, index) => {
+                      const chave = `${materia}-${index}`;
+                      const dadosAtuais = desempenho[materia]?.[index];
+                      const total = dadosAtuais?.total || 0;
+                      const acertos = dadosAtuais?.acertos || 0;
+                      const percentual = total > 0 ? Math.round((acertos / total) * 100) : 0;
+                      const valores = registroConteudos[chave] || { acertos: 0, erros: 0 };
+
+                      return (
+                        <div className="conteudo-row" key={chave}>
+                          <div className="conteudo-info">
+                            <strong>{assunto}</strong>
+                            <span>{percentual}% ({acertos}/{total})</span>
+                          </div>
+
+                          <div className="conteudo-inputs">
+                            <label className="input-field">
+                              <span>ACERTOS</span>
+                              <input
+                                type="number"
+                                min="0"
+                                value={valores.acertos}
+                                onChange={(e) => handleConteudoChange(materia, index, "acertos", e.target.value)}
+                              />
+                            </label>
+                            <label className="input-field">
+                              <span>ERROS</span>
+                              <input
+                                type="number"
+                                min="0"
+                                value={valores.erros}
+                                onChange={(e) => handleConteudoChange(materia, index, "erros", e.target.value)}
+                              />
+                            </label>
+                          </div>
+
+                          <button className="btn-conteudo" onClick={() => salvarConteudo(materia, index, valores)}>
+                            SALVAR
+                          </button>
                         </div>
-
-                        <div className="conteudo-inputs">
-                          <label className="input-field">
-                            <span>ACERTOS</span>
-                            <input
-                              type="number"
-                              min="0"
-                              value={valores.acertos}
-                              onChange={(e) => handleConteudoChange(materia, index, "acertos", e.target.value)}
-                            />
-                          </label>
-                          <label className="input-field">
-                            <span>ERROS</span>
-                            <input
-                              type="number"
-                              min="0"
-                              value={valores.erros}
-                              onChange={(e) => handleConteudoChange(materia, index, "erros", e.target.value)}
-                            />
-                          </label>
-                        </div>
-
-                        <button className="btn-conteudo" onClick={() => salvarConteudo(materia, index, valores)}>
-                          SALVAR
-                        </button>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       </section>
 
