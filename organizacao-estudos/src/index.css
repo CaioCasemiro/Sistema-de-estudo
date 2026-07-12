@@ -185,6 +185,24 @@ body {
   text-align: center;
 }
 
+/* ANOTAÇÕES PARA SEMANA */
+.anotacoes-semana {
+  margin-bottom: 50px;
+  padding: 35px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-tac);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.anotacoes-semana h2 {
+  font-size: 2rem;
+  color: var(--accent-ouro);
+  margin-bottom: 25px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
 /* REGISTRO DE CONTEÚDOS */
 .registro-conteudos {
   margin-bottom: 50px;

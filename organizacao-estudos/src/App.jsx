@@ -45,7 +45,8 @@ export default function App() {
   const [simulados, setSimulados] = useState([]);
   const [materiaDetalhada, setMateriaDetalhada] = useState(null);
   const [registroConteudos, setRegistroConteudos] = useState({});
-  const [fotoMetas, setFotoMetas] = useState(caminhosImagensMetas[0] || "");
+  const [fotoMetas, setFotoMetas] = useState(caminhosImagensMetas[1] || "");
+  const [fotoAnotacoes, setFotoAnotacoes] = useState(caminhosImagensMetas[0] || "");
 
   const diaHoje = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][new Date().getDay()];
 
@@ -288,6 +289,19 @@ export default function App() {
           ) : (
             <div className="mural-placeholder">
               Ainda não há imagem disponível. Adicione um arquivo na pasta public/ do projeto para exibi-la aqui.
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="anotacoes-semana">
+        <h2>▼ ANOTAÇÕES PARA SEMANA ▼</h2>
+        <div className="mural-content">
+          {fotoAnotacoes ? (
+            <img className="mural-foto" src={fotoAnotacoes} alt="Anotações para semana" />
+          ) : (
+            <div className="mural-placeholder">
+              Adicione um arquivo na pasta public/ do projeto para exibi-lo aqui.
             </div>
           )}
         </div>
